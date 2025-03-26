@@ -1,20 +1,23 @@
 import { Router } from 'express';
 import {
-	login,
-	register,
-	logout,
-	refreshToken,
-	logoutAllDevices,
-	checkAuthentication,
+  login,
+  register,
+  logout,
+  refreshToken,
+  logoutAllDevices,
+  checkAuthentication,
 } from '@/interfaces/controllers/auth.controller';
 import requireAuth from '../middleware/requireAuth';
 import {
-	loginLimiter,
-	refreshTokenLimiter,
-	registerLimiter,
+  loginLimiter,
+  refreshTokenLimiter,
+  registerLimiter,
 } from '../middleware/rateLimiters';
+import { logRequest } from '../middleware/logRequest';
 
 const authRouter = Router();
+
+authRouter.use(logRequest);
 
 authRouter.post('/login', loginLimiter, login);
 authRouter.post('/register', registerLimiter, register);

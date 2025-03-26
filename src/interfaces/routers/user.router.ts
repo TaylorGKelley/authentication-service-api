@@ -5,7 +5,7 @@ import { getMyInfo, updateMyInfo } from '../controllers/user.controller';
 const userRouter = Router();
 
 userRouter
-	.get('/me', requireAuth, getMyInfo)
-	.patch('/me', requireAuth, updateMyInfo);
+  .get('/me', requireAuth, getMyInfo)
+  .patch('/me', requireAuth, updateMyInfo);
 
 export default userRouter;
