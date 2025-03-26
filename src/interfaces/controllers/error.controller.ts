@@ -18,5 +18,7 @@ export const errorHandler: ErrorRequestHandler = (
 					? error.stack
 					: undefined,
 		});
+	} else {
+		console.error('threw an error');
 	}
 };
