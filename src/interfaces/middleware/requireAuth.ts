@@ -9,10 +9,10 @@ const requireAuth: RequestHandler = async (req, _res, next) => {
     const accessToken = extractBearerToken(req);
     if (!accessToken) throw new AppError('Authentication token not found', 401);
 
-    const userId = await verifyAccessToken(accessToken);
-    if (!userId) throw new AppError('Invalid access token', 401);
+    const verifiedToken = await verifyAccessToken(accessToken);
+    if (!verifiedToken?.id) throw new AppError('Invalid access token', 401);
 
-    req.user = { id: userId };
+    req.user = verifiedToken;
 
     next();
   } catch (error) {

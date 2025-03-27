@@ -1,13 +1,13 @@
 import express from 'express';
 import cors from 'cors';
 import passport from '@/infrastructure/configurations/passport';
-import authRouter from './interfaces/routers/auth.router';
-import { errorHandler } from './interfaces/controllers/error.controller';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import userRouter from './interfaces/routers/user.router';
 import csrfProtected from './interfaces/middleware/csrfProtected';
 import { generalLimiter } from './interfaces/middleware/rateLimiters';
+import { errorHandler } from './interfaces/controllers/error.controller';
+import authRouter from './interfaces/routers/auth.router';
+import myInfoRouter from './interfaces/routers/myInfo.router';
 
 const app = express();
 
@@ -36,7 +36,7 @@ app.use(
 app.use(passport.initialize());
 
 app.use('/api/v1', authRouter);
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1/users', myInfoRouter);
 
 app.use('*', (req, res) => {
   res.status(404).json({ message: 'Not found' });

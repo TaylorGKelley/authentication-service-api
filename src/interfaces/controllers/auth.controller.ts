@@ -116,9 +116,9 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
     const { refreshToken } = req.cookies;
     if (!refreshToken) throw new AppError('Refresh token not found', 401);
 
-    const userId = await verifyRefreshToken(refreshToken);
+    const verifiedRefreshToken = await verifyRefreshToken(refreshToken);
 
-    const user = await findUser({ id: userId });
+    const user = await findUser({ id: verifiedRefreshToken.id });
 
     // delete the current tokens
     await deletePreviousTokens(req);
@@ -149,7 +149,7 @@ export const checkAuthentication: RequestHandler<
   { includeCSRFToken?: string }
 > = async (req, res, next) => {
   try {
-    const includeCSRFToken = req.query.includeCSRFToken === 'true';
+    const includeCSRFToken = req.query.includeCSRFToken === 'true'; // send csrf token back to user
 
     res.status(200).json({
       isAuthenticated: true,

@@ -23,8 +23,14 @@ export const profileInfoData: (typeof profileInfoTable.$inferInsert)[] = [
 
 export const userRolesData: (typeof userRoleTable.$inferInsert)[] = [
   {
+    id: 1,
     userId: 1,
     roleId: 1,
+  },
+  {
+    id: 2,
+    userId: 1,
+    roleId: 2,
   },
 ];
 

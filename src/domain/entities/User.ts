@@ -1,39 +1,42 @@
-export class User {
-	public id?: number;
-	public googleId?: string;
-	public githubId?: string;
-	public email?: string;
-	public emailVerified?: boolean;
-	public accountActive?: boolean;
-	public lastLoginAt?: Date;
-	public createdAt?: Date;
-	public updatedAt?: Date;
+import { Role } from './Role';
 
-	constructor(user: Partial<User>) {
-		Object.assign(this, user);
-	}
+export class User {
+  public id?: number;
+  public googleId?: string;
+  public githubId?: string;
+  public email?: string;
+  public emailVerified?: boolean;
+  public roles?: Role[];
+  public accountActive?: boolean;
+  public lastLoginAt?: Date;
+  public createdAt?: Date;
+  public updatedAt?: Date;
+
+  constructor(user: Partial<User>) {
+    Object.assign(this, user);
+  }
 }
 
 export class UserWithPassword extends User {
-	public password?: string;
+  public password?: string;
 
-	constructor(user: Partial<UserWithPassword>) {
-		super(user as User);
-		Object.assign(this, user);
-	}
+  constructor(user: Partial<UserWithPassword>) {
+    super(user as User);
+    Object.assign(this, user);
+  }
 }
 
 export class UserWithProfile extends User {
-	firstName?: string;
-	lastName?: string;
-	phoneNumber?: string;
-	profileImage?: string;
+  firstName?: string;
+  lastName?: string;
+  phoneNumber?: string;
+  profileImage?: string;
 
-	constructor(
-		user: Partial<UserWithPassword>,
-		profileInfo: Partial<UserWithProfile>
-	) {
-		super(user);
-		Object.assign(this, { ...user, ...profileInfo });
-	}
+  constructor(
+    user: Partial<UserWithPassword>,
+    profileInfo: Partial<UserWithProfile>
+  ) {
+    super(user);
+    Object.assign(this, { ...user, ...profileInfo });
+  }
 }
