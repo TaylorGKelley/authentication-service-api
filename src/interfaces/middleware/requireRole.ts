@@ -16,19 +16,16 @@ const requireRole: (allowedPermissionLevels: roleType) => RequestHandler =
       const currentRoles = (req.user as AccessTokenPayload).roles;
 
       if (
-        currentRoles.some((currentRole) =>
+        !currentRoles.some((currentRole) =>
           allowedPermissionLevels.includes(currentRole.permissionLevel)
         )
       ) {
-        // Authorized
-        console.log('authorized');
-      } else {
-        // UnAuthorized
+        // Unauthorized
         throw new AppError('User is not authorized to make this request', 403);
+      } else {
+        // Authorized
+        next();
       }
-      console.log(currentRoles, allowedPermissionLevels);
-
-      next();
     } catch (error) {
       next(error);
     }

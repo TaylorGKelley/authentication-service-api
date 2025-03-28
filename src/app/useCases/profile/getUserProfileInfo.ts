@@ -1,12 +1,17 @@
 import { db } from '@/infrastructure/database';
-import { eq } from 'drizzle-orm';
+import { eq, getTableColumns } from 'drizzle-orm';
 import { profileInfoTable, userTable } from '@/infrastructure/database/schema';
-import { UserWithPassword, UserWithProfile } from '@/domain/entities/User';
+import { User, UserWithProfile } from '@/domain/entities/User';
 
 const getUserProfileInfo = async (userId: number) => {
+  const { password, ...columnsToSelect } = getTableColumns(userTable);
+
   const result = (
     await db
-      .select()
+      .select({
+        user: { ...columnsToSelect },
+        profileInfo: { ...getTableColumns(profileInfoTable) },
+      })
       .from(userTable)
       .where(eq(userTable.id, userId))
       .leftJoin(profileInfoTable, eq(userTable.id, profileInfoTable.userId))
@@ -16,7 +21,7 @@ const getUserProfileInfo = async (userId: number) => {
   if (!result) return null;
 
   return new UserWithProfile(
-    result.user as UserWithPassword,
+    result.user as User,
     result.profileInfo as UserWithProfile
   );
 };
