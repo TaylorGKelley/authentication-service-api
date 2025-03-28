@@ -1,31 +1,29 @@
-// import {
-// 	GoogleCallbackParameters,
-// 	Profile,
-// 	VerifyCallback,
-// } from 'passport-google-oauth20';
-// import { User } from '../../domain/entities/User';
+import { VerifyFunction } from 'passport-google-oauth2';
+import { User } from '@/domain/entities/User';
 
-// const googleAuthentication = (
-// 	accessToken: string,
-// 	refreshToken: string,
-// 	profile: Profile,
-// 	done: VerifyCallback
-// ) => {
-// 	const user = new User();
+const googleAuthentication: VerifyFunction = (
+  _accessToken,
+  _refreshToken,
+  profile,
+  done
+) => {
+  console.log(profile);
 
-// 	user.findByGoogleId(profile.id);
-// 	if (!user.id) {
-// 		user.createGoogleUser({
-// 			firstName: profile.name?.givenName!,
-// 			lastName: profile.name?.familyName!,
-// 			email: profile.emails?.[0].value!,
-// 			googleId: profile.id,
-// 		});
-// 	}
+  const user = new User({ id: 1 });
 
-// 	if (!user.id) done(new Error('Error fetching or creating user'), false);
+  // user.findByGoogleId(profile.id);
+  // if (!user.id) {
+  //   user.createGoogleUser({
+  //     firstName: profile.name?.givenName!,
+  //     lastName: profile.name?.familyName!,
+  //     email: profile.emails?.[0].value!,
+  //     googleId: profile.id,
+  //   });
+  // }
 
-// 	done(null, user);
-// };
+  // if (!user.id) done(new Error('Error fetching or creating user'), false);
 
-// export default googleAuthentication;
+  done(null, user);
+};
+
+export default googleAuthentication;

@@ -8,6 +8,7 @@ import { generalLimiter } from './interfaces/middleware/rateLimiters';
 import { errorHandler } from './interfaces/controllers/error.controller';
 import authRouter from './interfaces/routers/auth.router';
 import myInfoRouter from './interfaces/routers/myInfo.router';
+import googleOAuthRouter from './interfaces/routers/googleOAuth.router';
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.use(
       '/api/v1/login',
       '/api/v1/register',
       '/api/v1/isauthenticated',
+      '/api/v1/auth/google',
+      '/api/v1/auth/google/callback',
     ],
   })
 ); // Protect the entire application (CSRF)
@@ -36,6 +39,7 @@ app.use(
 app.use(passport.initialize());
 
 app.use('/api/v1', authRouter);
+app.use('/api/v1/auth/google', googleOAuthRouter);
 app.use('/api/v1/users', myInfoRouter);
 
 app.use('*', (req, res) => {
