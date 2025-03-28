@@ -1,29 +1,33 @@
 import { VerifyFunction } from 'passport-google-oauth2';
-import { User } from '@/domain/entities/User';
+import findUser from '@/app/useCases/user/findUser';
+import createGoogleUser from '@/app/useCases/user/createGoogleUser';
+import { AppError } from '@/domain/entities/AppError';
 
-const googleAuthentication: VerifyFunction = (
+const googleAuthentication: VerifyFunction = async (
   _accessToken,
   _refreshToken,
   profile,
   done
 ) => {
-  console.log(profile);
+  try {
+    let user = await findUser({ googleId: profile.id });
 
-  const user = new User({ id: 1 });
+    if (!user.id) {
+      user = await createGoogleUser({
+        googleId: profile.id,
+        email: profile.email,
+        displayName: profile.displayName,
+        firstName: profile.name.givenName,
+        lastName: profile.name.familyName,
+      });
+    }
 
-  // user.findByGoogleId(profile.id);
-  // if (!user.id) {
-  //   user.createGoogleUser({
-  //     firstName: profile.name?.givenName!,
-  //     lastName: profile.name?.familyName!,
-  //     email: profile.emails?.[0].value!,
-  //     googleId: profile.id,
-  //   });
-  // }
+    if (!user.id) throw new AppError('Error fetching or creating user', 500);
 
-  // if (!user.id) done(new Error('Error fetching or creating user'), false);
-
-  done(null, user);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
 };
 
 export default googleAuthentication;

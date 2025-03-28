@@ -16,6 +16,6 @@ export const permissionLevelEnum = pgEnum('permissionLevel', [
 export const roleTable = pgTable('role', {
   id: integer('id').primaryKey(),
   role: varchar('role', { length: 256 }).notNull(),
-  isDefault: boolean('isDefault').default(false),
-  permissionLevel: permissionLevelEnum('permissionLevel').notNull(),
+  isDefault: boolean('is_default').default(false),
+  permissionLevel: permissionLevelEnum('permission_level').notNull(),
 });

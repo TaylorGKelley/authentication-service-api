@@ -11,7 +11,7 @@ import { profileInfoTable, roleTable, userRoleTable } from '.';
 
 export const userTable = pgTable('user', {
   id: serial('id').primaryKey(),
-  googleId: text('google_id'),
+  googleId: varchar('google_id', { length: 50 }).unique(),
   githubId: text('github_id'),
   email: varchar('email', { length: 256 }).notNull(),
   emailVerified: boolean('email_verified').notNull().default(false),
