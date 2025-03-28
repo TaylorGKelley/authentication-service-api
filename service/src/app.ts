@@ -11,13 +11,12 @@ import myInfoRouter from './interfaces/routers/myInfo.router';
 import googleOAuthRouter from './interfaces/routers/googleOAuth.router';
 
 const app = express();
-
 app.use(cookieParser());
 app.use(express.json());
 
 const corsOptions = {
   origin:
-    process.env.NODE_ENV === 'development' ? '*' : 'http://production.url',
+    process.env.NODE_ENV === 'development' ? '*' : 'http://localhost:5173',
   credentials: true, // Allow cookies (refresh token) to be sent
 } as const;
 app.use(cors(corsOptions));

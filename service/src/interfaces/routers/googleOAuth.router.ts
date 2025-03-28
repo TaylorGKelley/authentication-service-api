@@ -1,8 +1,11 @@
 import passport from '@/infrastructure/configurations/passport';
 import { Router } from 'express';
 import { processSignIn } from '../controllers/googleOAuth.controller';
+import { loginLimiter } from '../middleware/rateLimiters';
 
 const googleOAuthRouter = Router();
+
+googleOAuthRouter.use(loginLimiter);
 
 googleOAuthRouter.get(
   '/',
