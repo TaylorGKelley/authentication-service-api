@@ -19,6 +19,9 @@ import extractBearerToken from '@/app/utils/extractBearerToken';
 import deletePreviousTokens from '@/app/utils/deletePreviousTokens';
 import Email, { EmailAddress } from '@/domain/types/mail/Email';
 import { sendMail } from '@/app/useCases/mailing/sendMail';
+import { isValidPasswordResetToken } from '@/app/useCases/user/passwordResetToken/isValid';
+import updatePassword from '@/app/useCases/user/updatePassword';
+import { createPasswordResetToken } from '@/app/useCases/user/passwordResetToken/create';
 
 export const login: RequestHandler<
 	any,
@@ -199,23 +202,61 @@ export const logoutAllDevices: RequestHandler = async (req, res, next) => {
 	}
 };
 
+export const resetPasswordSender: RequestHandler<
+	any,
+	any,
+	{ email: EmailAddress }
+> = async (req, res, next) => {
+	try {
+		const { email } = req.body;
+
+		const resetToken = await createPasswordResetToken(email);
+
+		const message = {
+			to: email,
+			subject: 'Password Reset',
+			text: 'Password Reset',
+			html: `
+        <p>Forgot Password</p>
+        <br />
+        <a href="${process.env.CLIENT_URL}/reset-password?resetToken=${resetToken}">Reset Password</a>
+              `,
+		} as Email;
+
+		await sendMail(message);
+
+		res.status(200).json({
+			message: 'Email sent',
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
 export const resetPassword: RequestHandler<
 	any,
 	any,
-	{ email: string }
-> = async (req, res) => {
+	{ resetToken: string; newPassword: string; newPasswordConfirm: string }
+> = async (req, res, next) => {
 	try {
-		const message: Email = {
-			to: req.body.email as EmailAddress,
-			subject: 'Forgot Password',
-			text: 'Forgot Password',
-			html: '<h1>Forgot Password</h1>',
-		};
-		await sendMail(message);
-		console.log('Email sent');
-		res.sendStatus(200);
+		const { resetToken, newPassword, newPasswordConfirm } = req.body;
+
+		const token = await isValidPasswordResetToken(resetToken);
+
+		if (token.isValid) {
+			throw new AppError('Invalid or expired password reset token', 400);
+		}
+
+		if (newPassword !== newPasswordConfirm) {
+			throw new AppError('Passwords do not match', 400);
+		}
+
+		await updatePassword(token.userId!, newPassword);
+
+		res.status(200).json({
+			message: 'Password reset',
+		});
 	} catch (error) {
-		console.error(error);
-		res.sendStatus(500);
+		next(error);
 	}
 };

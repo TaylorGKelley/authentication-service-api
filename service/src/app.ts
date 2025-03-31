@@ -15,24 +15,24 @@ app.use(cookieParser());
 app.use(express.json());
 
 const corsOptions = {
-  origin:
-    process.env.NODE_ENV === 'development' ? '*' : 'http://localhost:5173',
-  credentials: true, // Allow cookies (refresh token) to be sent
+	origin:
+		process.env.NODE_ENV === 'development' ? '*' : process.env.CLIENT_URL!,
+	credentials: true, // Allow cookies (refresh token) to be sent
 } as const;
 app.use(cors(corsOptions));
 app.use(helmet());
 app.use(generalLimiter);
 
 app.use(
-  csrfProtected({
-    exemptRoutes: [
-      '/api/v1/login',
-      '/api/v1/register',
-      '/api/v1/isauthenticated',
-      '/api/v1/auth/google',
-      '/api/v1/auth/google/callback',
-    ],
-  })
+	csrfProtected({
+		exemptRoutes: [
+			'/api/v1/login',
+			'/api/v1/register',
+			'/api/v1/isauthenticated',
+			'/api/v1/auth/google',
+			'/api/v1/auth/google/callback',
+		],
+	})
 ); // Protect the entire application (CSRF)
 
 app.use(passport.initialize());
@@ -42,7 +42,7 @@ app.use('/api/v1/auth/google', googleOAuthRouter);
 app.use('/api/v1/users', myInfoRouter);
 
 app.use('*', (req, res) => {
-  res.status(404).json({ message: 'Not found' });
+	res.status(404).json({ message: 'Not found' });
 });
 
 app.use(errorHandler);

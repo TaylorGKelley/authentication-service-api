@@ -6,6 +6,7 @@ import {
 	refreshToken,
 	logoutAllDevices,
 	checkAuthentication,
+	resetPasswordSender,
 	resetPassword,
 } from '@/interfaces/controllers/auth.controller';
 import requireAuth from '../middleware/requireAuth';
@@ -29,6 +30,7 @@ authRouter.get('/refresh-token', refreshTokenLimiter, refreshToken);
 authRouter.delete('/logout', requireAuth, logout);
 authRouter.delete('/logout/all', requireAuth, logoutAllDevices);
 
-authRouter.post('/reset-password', resetPassword);
+authRouter.get('/send-reset-password', resetPasswordSender);
+authRouter.post('/send-reset-password', resetPassword);
 
 export default authRouter;
