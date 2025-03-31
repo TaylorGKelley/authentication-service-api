@@ -1,17 +1,18 @@
 import { Router } from 'express';
 import {
-  login,
-  register,
-  logout,
-  refreshToken,
-  logoutAllDevices,
-  checkAuthentication,
+	login,
+	register,
+	logout,
+	refreshToken,
+	logoutAllDevices,
+	checkAuthentication,
+	resetPassword,
 } from '@/interfaces/controllers/auth.controller';
 import requireAuth from '../middleware/requireAuth';
 import {
-  loginLimiter,
-  refreshTokenLimiter,
-  registerLimiter,
+	loginLimiter,
+	refreshTokenLimiter,
+	registerLimiter,
 } from '../middleware/rateLimiters';
 import { logRequest } from '../middleware/logRequest';
 
@@ -27,5 +28,7 @@ authRouter.get('/refresh-token', refreshTokenLimiter, refreshToken);
 
 authRouter.delete('/logout', requireAuth, logout);
 authRouter.delete('/logout/all', requireAuth, logoutAllDevices);
+
+authRouter.post('/reset-password', resetPassword);
 
 export default authRouter;
