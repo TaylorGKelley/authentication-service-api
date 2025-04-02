@@ -1,5 +1,7 @@
 import { useForm } from '@tanstack/react-form';
+import { redirect } from '@tanstack/react-router';
 import { z } from 'zod';
+import axios from 'axios';
 
 const ForgotPasswordForm = () => {
   const form = useForm({
@@ -12,8 +14,18 @@ const ForgotPasswordForm = () => {
       }),
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
-      // Make API request to backend GET /send-reset-password with body of { email }
+      try {
+        // Make API request to backend GET /send-reset-password with body of { email }
+        await axios.get('http://localhost:7001/api/v1/send-reset-password', {
+          params: {
+            email: value.email,
+          },
+        });
+
+        redirect({ to: '/' });
+      } catch (error) {
+        console.error(error);
+      }
     },
   });
 

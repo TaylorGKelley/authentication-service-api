@@ -205,10 +205,13 @@ export const logoutAllDevices: RequestHandler = async (req, res, next) => {
 export const resetPasswordSender: RequestHandler<
 	any,
 	any,
-	{ email: EmailAddress }
+	any,
+	{
+		email: EmailAddress;
+	}
 > = async (req, res, next) => {
 	try {
-		const { email } = req.body;
+		const { email } = req.query;
 
 		const resetToken = await createPasswordResetToken(email);
 

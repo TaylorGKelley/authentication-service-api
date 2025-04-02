@@ -1,6 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { useSearch } from '@tanstack/react-router';
 import { z } from 'zod';
+import axios from 'axios';
 
 const ForgotPasswordResetForm = () => {
   const { resetToken } = useSearch({
@@ -26,10 +27,16 @@ const ForgotPasswordResetForm = () => {
         }),
     },
     onSubmit: async ({ value }) => {
-      if (resetToken === undefined) console.error('No reset token');
+      try {
+        if (resetToken === undefined) throw new Error('No reset token');
 
-      console.log({ resetToken, ...value });
-      // Make API request to backend POST /reset-password with body of { resetToken, newPassword, newPasswordConfirm }
+        await axios.post('http://localhost:7001/api/v1/reset-password', {
+          resetToken,
+          ...value,
+        });
+      } catch (error) {
+        console.error(error);
+      }
     },
   });
   return (
