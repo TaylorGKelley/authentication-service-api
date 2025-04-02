@@ -31,6 +31,6 @@ authRouter.delete('/logout', requireAuth, logout);
 authRouter.delete('/logout/all', requireAuth, logoutAllDevices);
 
 authRouter.get('/send-reset-password', resetPasswordSender);
-authRouter.post('/send-reset-password', resetPassword);
+authRouter.post('/reset-password', resetPassword);
 
 export default authRouter;
