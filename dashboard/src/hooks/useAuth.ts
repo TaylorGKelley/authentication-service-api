@@ -17,9 +17,19 @@ const useAuth = () => {
     context.setUser(user);
   };
 
-  // ! add logout
+  const logout = () => {
+    context.setIsAuthenticated(false);
+    context.setAccessToken(null);
+    context.setUser(null);
+  };
 
-  return { ...context, login };
+  return {
+    isAuthenticated: context.isAuthenticated,
+    accessToken: context.accessToken,
+    user: context.user,
+    login,
+    logout,
+  };
 };
 
 export default useAuth;

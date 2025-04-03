@@ -4,7 +4,7 @@ import LoginForm from '../../components/forms/LoginForm';
 export const Route = createFileRoute('/login/')({
   component: RouteComponent,
   validateSearch: (search) => ({
-    redirect: search.redirect,
+    redirect: search.redirect as string,
   }),
 });
 

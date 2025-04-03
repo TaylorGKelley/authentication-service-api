@@ -18,13 +18,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
         <Link to="/" className="[&.active]:font-bold">
           Home
         </Link>{' '}
-        <Link to="/forgot-password" className="[&.active]:font-bold">
-          Forgot my password
-        </Link>
         <Link to="/register" className="[&.active]:font-bold">
           Register
         </Link>
-        <Link to="/login" className="[&.active]:font-bold">
+        <Link
+          to="/login"
+          search={{ redirect: '/' }}
+          className="[&.active]:font-bold"
+        >
           Login
         </Link>
       </div>

@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import { useRouter } from '@tanstack/react-router';
+import { Link, useRouter, useSearch } from '@tanstack/react-router';
 import { z } from 'zod';
 import axios from 'axios';
 import useAuth from '../../hooks/useAuth';
@@ -7,6 +7,7 @@ import useAuth from '../../hooks/useAuth';
 const LoginForm = () => {
   const router = useRouter();
   const auth = useAuth();
+  const { redirect } = useSearch({ from: '/login/' });
 
   const form = useForm({
     defaultValues: {
@@ -34,7 +35,7 @@ const LoginForm = () => {
             accessToken: (response.data as { accessToken: string }).accessToken,
             user: { id: 0, email: '' },
           });
-          router.navigate({ to: '/' });
+          router.navigate({ to: redirect || '/' });
         }
       } catch (error) {
         console.error(error);
@@ -100,6 +101,12 @@ const LoginForm = () => {
         >
           Login with Google
         </a>
+        <Link
+          to="/forgot-password"
+          className="text-center text-sm text-gray-700 underline"
+        >
+          Forgot my password
+        </Link>
       </form>
     </div>
   );
