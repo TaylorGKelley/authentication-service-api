@@ -12,10 +12,11 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
-import { Route as LoginImport } from './routes/login'
 import { Route as IndexImport } from './routes/index'
+import { Route as LoginIndexImport } from './routes/login/index'
 import { Route as ForgotPasswordIndexImport } from './routes/forgot-password/index'
 import { Route as ForgotPasswordResetImport } from './routes/forgot-password/reset'
+import { Route as LoginGoogleCallbackImport } from './routes/login/google/callback'
 
 // Create/Update Routes
 
@@ -25,15 +26,15 @@ const RegisterRoute = RegisterImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const LoginRoute = LoginImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LoginIndexRoute = LoginIndexImport.update({
+  id: '/login/',
+  path: '/login/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -49,6 +50,12 @@ const ForgotPasswordResetRoute = ForgotPasswordResetImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const LoginGoogleCallbackRoute = LoginGoogleCallbackImport.update({
+  id: '/login/google/callback',
+  path: '/login/google/callback',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -58,13 +65,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
     }
     '/register': {
@@ -88,6 +88,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ForgotPasswordIndexImport
       parentRoute: typeof rootRoute
     }
+    '/login/': {
+      id: '/login/'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/login/google/callback': {
+      id: '/login/google/callback'
+      path: '/login/google/callback'
+      fullPath: '/login/google/callback'
+      preLoaderRoute: typeof LoginGoogleCallbackImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -95,68 +109,76 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/forgot-password/reset': typeof ForgotPasswordResetRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/login': typeof LoginIndexRoute
+  '/login/google/callback': typeof LoginGoogleCallbackRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/forgot-password/reset': typeof ForgotPasswordResetRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
+  '/login': typeof LoginIndexRoute
+  '/login/google/callback': typeof LoginGoogleCallbackRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/forgot-password/reset': typeof ForgotPasswordResetRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
+  '/login/': typeof LoginIndexRoute
+  '/login/google/callback': typeof LoginGoogleCallbackRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/login'
     | '/register'
     | '/forgot-password/reset'
     | '/forgot-password'
+    | '/login'
+    | '/login/google/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/login'
     | '/register'
     | '/forgot-password/reset'
     | '/forgot-password'
+    | '/login'
+    | '/login/google/callback'
   id:
     | '__root__'
     | '/'
-    | '/login'
     | '/register'
     | '/forgot-password/reset'
     | '/forgot-password/'
+    | '/login/'
+    | '/login/google/callback'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
   ForgotPasswordResetRoute: typeof ForgotPasswordResetRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
+  LoginIndexRoute: typeof LoginIndexRoute
+  LoginGoogleCallbackRoute: typeof LoginGoogleCallbackRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
   ForgotPasswordResetRoute: ForgotPasswordResetRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
+  LoginIndexRoute: LoginIndexRoute,
+  LoginGoogleCallbackRoute: LoginGoogleCallbackRoute,
 }
 
 export const routeTree = rootRoute
@@ -170,17 +192,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/login",
         "/register",
         "/forgot-password/reset",
-        "/forgot-password/"
+        "/forgot-password/",
+        "/login/",
+        "/login/google/callback"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/login": {
-      "filePath": "login.tsx"
     },
     "/register": {
       "filePath": "register.tsx"
@@ -190,6 +210,12 @@ export const routeTree = rootRoute
     },
     "/forgot-password/": {
       "filePath": "forgot-password/index.tsx"
+    },
+    "/login/": {
+      "filePath": "login/index.tsx"
+    },
+    "/login/google/callback": {
+      "filePath": "login/google/callback.tsx"
     }
   }
 }

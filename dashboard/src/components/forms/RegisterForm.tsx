@@ -1,9 +1,11 @@
 import { useForm } from '@tanstack/react-form';
-import { redirect } from '@tanstack/react-router';
+import { useRouter } from '@tanstack/react-router';
 import { z } from 'zod';
 import axios from 'axios';
 
 const RegisterForm = () => {
+  const router = useRouter();
+
   const form = useForm({
     defaultValues: {
       email: '',
@@ -35,7 +37,8 @@ const RegisterForm = () => {
           },
         );
         console.log(response.data);
-        redirect({ to: '/', from: '/register' });
+
+        router.navigate({ to: '/' });
       } catch (error) {
         console.error(error);
       }

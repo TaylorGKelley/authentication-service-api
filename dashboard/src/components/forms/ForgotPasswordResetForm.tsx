@@ -1,9 +1,10 @@
 import { useForm } from '@tanstack/react-form';
-import { useSearch } from '@tanstack/react-router';
+import { useRouter, useSearch } from '@tanstack/react-router';
 import { z } from 'zod';
 import axios from 'axios';
 
 const ForgotPasswordResetForm = () => {
+  const router = useRouter();
   const { resetToken } = useSearch({
     from: '/forgot-password/reset',
   });
@@ -34,6 +35,8 @@ const ForgotPasswordResetForm = () => {
           resetToken,
           ...value,
         });
+
+        router.navigate({ to: '/' });
       } catch (error) {
         console.error(error);
       }
