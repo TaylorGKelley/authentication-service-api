@@ -6,22 +6,24 @@ import { EmailAddress } from '@/domain/types/mail/Email';
 import { AppError } from '@/domain/entities/AppError';
 
 export const createPasswordResetToken = async (email: EmailAddress) => {
-	const user = await findUser({ email });
+  const user = await findUser({ email });
 
-	if (user.googleId || user.githubId) {
-		throw new AppError(
-			'Password reset is not available for Google or GitHub users',
-			400
-		);
-	}
+  if (!user.id) {
+    throw new AppError('A user with that email was not found');
+  } else if (user.googleId || user.githubId) {
+    throw new AppError(
+      'Password reset is not available for Google or GitHub users',
+      400
+    );
+  }
 
-	const token = generateResetToken();
+  const token = generateResetToken();
 
-	await db.insert(passwordResetTable).values({
-		userId: user.id,
-		token,
-		expirationTime: new Date(Date.now() + 15 * 60 * 1000),
-	});
+  await db.insert(passwordResetTable).values({
+    userId: user.id,
+    token,
+    expirationTime: new Date(Date.now() + 15 * 60 * 1000),
+  });
 
-	return token;
+  return token;
 };
