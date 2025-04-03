@@ -2,9 +2,11 @@ import { useForm } from '@tanstack/react-form';
 import { useRouter } from '@tanstack/react-router';
 import { z } from 'zod';
 import axios from 'axios';
+import useAuth from '../../hooks/useAuth';
 
 const LoginForm = () => {
   const router = useRouter();
+  const auth = useAuth();
 
   const form = useForm({
     defaultValues: {
@@ -26,9 +28,14 @@ const LoginForm = () => {
             password: value.password,
           },
         );
-        console.log(response.data);
 
-        router.navigate({ to: '/' });
+        if (response.status === 200) {
+          auth.login({
+            accessToken: (response.data as { accessToken: string }).accessToken,
+            user: { id: 0, email: '' },
+          });
+          router.navigate({ to: '/' });
+        }
       } catch (error) {
         console.error(error);
       }

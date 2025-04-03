@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
+import { Route as ProtectedRouteImport } from './routes/protected.route'
 import { Route as IndexImport } from './routes/index'
 import { Route as LoginIndexImport } from './routes/login/index'
 import { Route as ForgotPasswordIndexImport } from './routes/forgot-password/index'
@@ -23,6 +24,12 @@ import { Route as LoginGoogleCallbackImport } from './routes/login/google/callba
 const RegisterRoute = RegisterImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ProtectedRouteRoute = ProtectedRouteImport.update({
+  id: '/protected',
+  path: '/protected',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -67,6 +74,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/protected': {
+      id: '/protected'
+      path: '/protected'
+      fullPath: '/protected'
+      preLoaderRoute: typeof ProtectedRouteImport
+      parentRoute: typeof rootRoute
+    }
     '/register': {
       id: '/register'
       path: '/register'
@@ -109,6 +123,7 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/protected': typeof ProtectedRouteRoute
   '/register': typeof RegisterRoute
   '/forgot-password/reset': typeof ForgotPasswordResetRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
@@ -118,6 +133,7 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/protected': typeof ProtectedRouteRoute
   '/register': typeof RegisterRoute
   '/forgot-password/reset': typeof ForgotPasswordResetRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
@@ -128,6 +144,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/protected': typeof ProtectedRouteRoute
   '/register': typeof RegisterRoute
   '/forgot-password/reset': typeof ForgotPasswordResetRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
@@ -139,6 +156,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/protected'
     | '/register'
     | '/forgot-password/reset'
     | '/forgot-password'
@@ -147,6 +165,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/protected'
     | '/register'
     | '/forgot-password/reset'
     | '/forgot-password'
@@ -155,6 +174,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/protected'
     | '/register'
     | '/forgot-password/reset'
     | '/forgot-password/'
@@ -165,6 +185,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProtectedRouteRoute: typeof ProtectedRouteRoute
   RegisterRoute: typeof RegisterRoute
   ForgotPasswordResetRoute: typeof ForgotPasswordResetRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
@@ -174,6 +195,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProtectedRouteRoute: ProtectedRouteRoute,
   RegisterRoute: RegisterRoute,
   ForgotPasswordResetRoute: ForgotPasswordResetRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
@@ -192,6 +214,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/protected",
         "/register",
         "/forgot-password/reset",
         "/forgot-password/",
@@ -201,6 +224,9 @@ export const routeTree = rootRoute
     },
     "/": {
       "filePath": "index.tsx"
+    },
+    "/protected": {
+      "filePath": "protected.route.tsx"
     },
     "/register": {
       "filePath": "register.tsx"
