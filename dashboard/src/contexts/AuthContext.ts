@@ -8,6 +8,8 @@ const AuthContext = createContext<AuthContextType>({
   setAccessToken: () => {},
   user: undefined,
   setUser: () => {},
+  login: () => {},
+  logout: () => {},
 });
 
 export default AuthContext;

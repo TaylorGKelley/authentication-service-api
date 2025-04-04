@@ -22,6 +22,7 @@ import { sendMail } from '@/app/useCases/mailing/sendMail';
 import { isValidPasswordResetToken } from '@/app/useCases/user/passwordResetToken/isValid';
 import updatePassword from '@/app/useCases/user/updatePassword';
 import { createPasswordResetToken } from '@/app/useCases/user/passwordResetToken/create';
+import getUserProfileInfo from '@/app/useCases/profile/getUserProfileInfo';
 
 export const login: RequestHandler<
 	any,
@@ -50,6 +51,8 @@ export const login: RequestHandler<
 			if (!newRefreshToken)
 				throw new AppError('Failed to generate refresh token', 500);
 
+			const profile = await getUserProfileInfo(user.id!);
+
 			res.cookie('refreshToken', newRefreshToken, {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === 'production',
@@ -58,9 +61,11 @@ export const login: RequestHandler<
 				maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
 			});
 
-			res
-				.status(200)
-				.json({ message: 'Login successful', accessToken: newAccessToken });
+			res.status(200).json({
+				message: 'Login successful',
+				accessToken: newAccessToken,
+				user: profile,
+			});
 		} catch (error) {
 			next(error);
 		}
@@ -102,6 +107,8 @@ export const register: RequestHandler<
 		const { oldRefreshToken } = req.cookies;
 		if (oldRefreshToken) await deleteRefreshTokenEntry(oldRefreshToken);
 
+		const profile = await getUserProfileInfo(newUser.id!);
+
 		res.cookie('refreshToken', newRefreshToken, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
@@ -110,7 +117,7 @@ export const register: RequestHandler<
 			maxAge: 7 * 24 * 60 * 60 * 1000,
 		});
 
-		res.json({ accessToken: newAccessToken, user: newUser });
+		res.status(201).json({ accessToken: newAccessToken, user: profile });
 	} catch (error) {
 		next(error);
 	}
@@ -147,18 +154,24 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
 	}
 };
 
-export const checkAuthentication: RequestHandler<
-	any,
-	any,
-	any,
-	{ includeCSRFToken?: string }
-> = async (req, res, next) => {
+export const checkAuthentication: RequestHandler = async (req, res, next) => {
 	try {
-		const includeCSRFToken = req.query.includeCSRFToken === 'true'; // send csrf token back to user
+		const profile = await getUserProfileInfo((req.user as User).id!);
 
 		res.status(200).json({
 			isAuthenticated: true,
-			csrfToken: includeCSRFToken ? req.csrfToken() : undefined,
+			// csrfToken: includeCSRFToken ? req.csrfToken() : undefined,
+			user: profile,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const csrfToken: RequestHandler = async (req, res, next) => {
+	try {
+		res.status(200).json({
+			csrfToken: req.csrfToken(),
 		});
 	} catch (error) {
 		next(error);

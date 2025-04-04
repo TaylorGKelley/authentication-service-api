@@ -8,6 +8,8 @@ type AuthContextType = {
   setAccessToken: Dispatch<SetStateAction<string | null>>;
   user?: User | null;
   setUser: Dispatch<SetStateAction<User | null>>;
+  login: ({ accessToken, user }: { accessToken: string; user: User }) => void;
+  logout: () => void;
 };
 
 export default AuthContextType;

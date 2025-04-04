@@ -3,6 +3,7 @@ import { Link, useRouter, useSearch } from '@tanstack/react-router';
 import { z } from 'zod';
 import axios from 'axios';
 import useAuth from '../../hooks/useAuth';
+import User from '../../types/User';
 
 const LoginForm = () => {
   const router = useRouter();
@@ -31,9 +32,14 @@ const LoginForm = () => {
         );
 
         if (response.status === 200) {
+          const { accessToken, user } = response.data as {
+            accessToken: string;
+            user: User;
+          };
+
           auth.login({
-            accessToken: (response.data as { accessToken: string }).accessToken,
-            user: { id: 0, email: '' },
+            accessToken: accessToken,
+            user,
           });
           router.navigate({ to: redirect || '/' });
         }

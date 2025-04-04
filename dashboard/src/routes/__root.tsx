@@ -8,7 +8,7 @@ import './global.css';
 import AuthContextType from '../types/AuthContextType';
 
 type RouterContext = {
-  auth: AuthContextType;
+  auth: AuthContextType | undefined;
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({

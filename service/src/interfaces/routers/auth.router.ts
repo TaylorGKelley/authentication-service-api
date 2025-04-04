@@ -8,6 +8,7 @@ import {
 	checkAuthentication,
 	resetPasswordSender,
 	resetPassword,
+	csrfToken,
 } from '@/interfaces/controllers/auth.controller';
 import requireAuth from '../middleware/requireAuth';
 import {
@@ -25,7 +26,9 @@ authRouter.post('/login', loginLimiter, login);
 authRouter.post('/register', registerLimiter, register);
 
 authRouter.get('/isauthenticated', requireAuth, checkAuthentication);
-authRouter.get('/refresh-token', refreshTokenLimiter, refreshToken);
+authRouter.get('/csrf-token', csrfToken);
+
+authRouter.post('/refresh-token', refreshTokenLimiter, refreshToken);
 
 authRouter.delete('/logout', requireAuth, logout);
 authRouter.delete('/logout/all', requireAuth, logoutAllDevices);

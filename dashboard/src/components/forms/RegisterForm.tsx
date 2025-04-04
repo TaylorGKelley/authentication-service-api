@@ -2,9 +2,12 @@ import { useForm } from '@tanstack/react-form';
 import { useRouter } from '@tanstack/react-router';
 import { z } from 'zod';
 import axios from 'axios';
+import useAuth from '../../hooks/useAuth';
+import User from '../../types/User';
 
 const RegisterForm = () => {
   const router = useRouter();
+  const auth = useAuth();
 
   const form = useForm({
     defaultValues: {
@@ -36,9 +39,20 @@ const RegisterForm = () => {
             ...value,
           },
         );
-        console.log(response.data);
 
-        router.navigate({ to: '/' });
+        if (response.status === 201) {
+          const { accessToken, user } = response.data as {
+            accessToken: string;
+            user: User;
+          };
+
+          auth.login({
+            accessToken: accessToken,
+            user,
+          });
+
+          router.navigate({ to: '/' });
+        }
       } catch (error) {
         console.error(error);
       }
