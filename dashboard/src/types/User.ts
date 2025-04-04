@@ -4,7 +4,6 @@ type User = {
   githubId?: string;
   email?: string;
   emailVerified?: boolean;
-  // roles?: Role[];
   accountActive?: boolean;
   lastLoginAt?: Date;
   createdAt?: Date;
@@ -14,10 +13,5 @@ type User = {
   phoneNumber?: string;
   profileImage?: string;
 };
-
-// type Role = {
-//   id: number;
-//   permissionLevel: string;
-// };
 
 export default User;

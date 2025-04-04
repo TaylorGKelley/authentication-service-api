@@ -26,6 +26,7 @@ const useAuth = () => {
   return {
     isAuthenticated: context.isAuthenticated,
     accessToken: context.accessToken,
+    setAccessToken: context.setAccessToken,
     user: context.user,
     login,
     logout,

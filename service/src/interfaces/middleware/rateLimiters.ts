@@ -2,7 +2,7 @@ import rateLimit from 'express-rate-limit';
 
 export const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000 * 1000, // 15 minutes
-  max: 20, // Limit each IP to 10 requests per windowMs
+  max: 1000, // Limit each IP to 10 requests per windowMs
   message: 'Too many requests from this IP, please try again later.',
 });
 
@@ -20,6 +20,6 @@ export const registerLimiter = rateLimit({
 
 export const refreshTokenLimiter = rateLimit({
   windowMs: 15 * 60 * 1000 * 1000,
-  max: 15, // Limit each IP to 2 refresh token requests per 15 minutes
+  max: 50, // Limit each IP to 2 refresh token requests per 15 minutes
   message: 'Too many attempts to refresh token, please try again later.',
 });

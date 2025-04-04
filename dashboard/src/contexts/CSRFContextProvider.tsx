@@ -1,11 +1,11 @@
-import { FC, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import { FC, PropsWithChildren, useEffect, useState } from 'react';
 import CSRFContext from './CSRFContext';
 import { useQuery } from '@tanstack/react-query';
-import AuthContext from './AuthContext';
 import axios from 'axios';
+import useAuth from '../hooks/useAuth';
 
 const CSRFContextProvider: FC<PropsWithChildren> = ({ children }) => {
-  const authContext = useContext(AuthContext);
+  const { setAccessToken } = useAuth();
   const [csrfToken, setCsrfToken] = useState<string | undefined>();
 
   const { data, isSuccess } = useQuery({
@@ -49,9 +49,9 @@ const CSRFContextProvider: FC<PropsWithChildren> = ({ children }) => {
 
   useEffect(() => {
     if (isSuccessRefresh) {
-      authContext.setAccessToken(dataRefresh!.accessToken);
+      setAccessToken(dataRefresh!.accessToken);
     } else {
-      authContext.setAccessToken(null);
+      setAccessToken(null);
     }
   }, [isSuccessRefresh, dataRefresh]);
 

@@ -1,4 +1,5 @@
 import { createFileRoute, useSearch } from '@tanstack/react-router';
+import useAuth from '../../../hooks/useAuth';
 
 export const Route = createFileRoute('/login/google/callback')({
   component: RouteComponent,
@@ -8,8 +9,12 @@ export const Route = createFileRoute('/login/google/callback')({
 });
 
 function RouteComponent() {
+  const auth = useAuth();
   const { accessToken } = useSearch({ from: '/login/google/callback' });
-  console.log(accessToken);
+
+  if (accessToken) {
+    auth.setAccessToken(accessToken!);
+  }
 
   return (
     <main>

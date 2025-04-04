@@ -38,6 +38,9 @@ const RegisterForm = () => {
           {
             ...value,
           },
+          {
+            withCredentials: true,
+          },
         );
 
         if (response.status === 201) {

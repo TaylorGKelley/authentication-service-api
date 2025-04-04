@@ -12,7 +12,7 @@ function Index() {
       <h3>
         {!auth.isAuthenticated
           ? 'Welcome Home!'
-          : `Welcome back, ${auth.user?.email}`}
+          : `Welcome back, ${auth.user?.firstName ? auth.user?.firstName + ' ' + auth.user?.lastName : auth.user?.email}`}
       </h3>
     </div>
   );

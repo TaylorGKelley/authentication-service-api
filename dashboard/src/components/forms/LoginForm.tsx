@@ -29,6 +29,9 @@ const LoginForm = () => {
             username: value.email,
             password: value.password,
           },
+          {
+            withCredentials: true,
+          },
         );
 
         if (response.status === 200) {
