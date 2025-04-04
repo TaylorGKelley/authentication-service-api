@@ -3,6 +3,7 @@ import User from '../types/User';
 import AuthContext from './AuthContext';
 import AuthContextType from '../types/AuthContextType';
 import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 
 const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,6 +22,9 @@ const AuthContextProvider: FC<PropsWithChildren> = ({ children }) => {
       // Handle successful data fetching
       setIsAuthenticated(data.isAuthenticated);
       setUser(data.user);
+    } else {
+      setIsAuthenticated(false);
+      setUser(null);
     }
   }, [isSuccess, data]);
 
@@ -46,7 +50,6 @@ const checkAuth = async (accessToken: string) => {
       authorization: `Bearer ${accessToken}`,
     },
   });
-  console.log('query ran');
 
   return response.data as {
     isAuthenticated: boolean;

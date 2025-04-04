@@ -2,6 +2,7 @@ import { FC, PropsWithChildren, useContext, useEffect, useState } from 'react';
 import CSRFContext from './CSRFContext';
 import { useQuery } from '@tanstack/react-query';
 import AuthContext from './AuthContext';
+import axios from 'axios';
 
 const CSRFContextProvider: FC<PropsWithChildren> = ({ children }) => {
   const authContext = useContext(AuthContext);
@@ -12,10 +13,12 @@ const CSRFContextProvider: FC<PropsWithChildren> = ({ children }) => {
     queryFn: async () => {
       const response = await axios.get(
         'http://localhost:7001/api/v1/csrf-token',
+        { withCredentials: true },
       );
 
       return response.data as { csrfToken: string };
     },
+    retry: false,
   });
 
   useEffect(() => {
@@ -34,17 +37,21 @@ const CSRFContextProvider: FC<PropsWithChildren> = ({ children }) => {
           headers: {
             'X-CSRF-Token': csrfToken,
           },
+          withCredentials: true,
         },
       );
 
       return response.data as { accessToken: string };
     },
     enabled: !!csrfToken,
+    retry: false,
   });
 
   useEffect(() => {
     if (isSuccessRefresh) {
       authContext.setAccessToken(dataRefresh!.accessToken);
+    } else {
+      authContext.setAccessToken(null);
     }
   }, [isSuccessRefresh, dataRefresh]);
 

@@ -20,6 +20,6 @@ export const registerLimiter = rateLimit({
 
 export const refreshTokenLimiter = rateLimit({
   windowMs: 15 * 60 * 1000 * 1000,
-  max: 2, // Limit each IP to 2 refresh token requests per 15 minutes
+  max: 15, // Limit each IP to 2 refresh token requests per 15 minutes
   message: 'Too many attempts to refresh token, please try again later.',
 });
