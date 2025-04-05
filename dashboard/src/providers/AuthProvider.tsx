@@ -25,6 +25,8 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
 
   // fetch auth state and tokens
   useEffect(() => {
+    if (accessToken === null) return; // Prevents this effect from running on logout, when accessToken is null
+
     const fetchAuthState = async () => {
       try {
         const response = await api.get<{
@@ -73,7 +75,9 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         if (
           (error.response.status === 403 &&
             error.response.data.message === 'Invalid access token') ||
-          (error.response.status === 401 && accessToken === undefined)
+          (error.response.status === 401 &&
+            error.response.data.message !== 'Refresh token not found' &&
+            accessToken === undefined)
         ) {
           try {
             const response = await api.post<{ accessToken: string }>(
@@ -103,7 +107,32 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     return () => {
       api.interceptors.response.eject(refreshInterceptor);
     };
-  }, [csrfToken]);
+  }, [csrfToken, accessToken]);
+
+  const login = ({
+    accessToken,
+    user,
+  }: {
+    accessToken: string;
+    user: User;
+  }) => {
+    setIsAuthenticated(true);
+    setAccessToken(accessToken);
+    setUser(user);
+  };
+
+  const logout = async () => {
+    await api.delete('/logout', {
+      headers: {
+        'X-CSRF-Token': csrfToken,
+      },
+      withCredentials: true,
+    });
+
+    setIsAuthenticated(false);
+    setAccessToken(null);
+    setUser(null);
+  };
 
   // Context's value
   const contextValue = {
@@ -113,6 +142,8 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     setAccessToken,
     user,
     setUser,
+    login,
+    logout,
   } as AuthContextType;
 
   return (

@@ -21,8 +21,8 @@ function RootLayout() {
   const router = useRouter();
   const { isAuthenticated, user, logout } = useAuthContext();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.navigate({ to: '/' });
   };
 
