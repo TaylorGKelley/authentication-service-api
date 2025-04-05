@@ -17,7 +17,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as LoginIndexImport } from './routes/login/index'
 import { Route as ForgotPasswordIndexImport } from './routes/forgot-password/index'
 import { Route as ForgotPasswordResetImport } from './routes/forgot-password/reset'
-import { Route as LoginGoogleCallbackImport } from './routes/login/google/callback'
+import { Route as LoginOauthCallbackImport } from './routes/login/oauth/callback'
 
 // Create/Update Routes
 
@@ -57,9 +57,9 @@ const ForgotPasswordResetRoute = ForgotPasswordResetImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const LoginGoogleCallbackRoute = LoginGoogleCallbackImport.update({
-  id: '/login/google/callback',
-  path: '/login/google/callback',
+const LoginOauthCallbackRoute = LoginOauthCallbackImport.update({
+  id: '/login/oauth/callback',
+  path: '/login/oauth/callback',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -109,11 +109,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginIndexImport
       parentRoute: typeof rootRoute
     }
-    '/login/google/callback': {
-      id: '/login/google/callback'
-      path: '/login/google/callback'
-      fullPath: '/login/google/callback'
-      preLoaderRoute: typeof LoginGoogleCallbackImport
+    '/login/oauth/callback': {
+      id: '/login/oauth/callback'
+      path: '/login/oauth/callback'
+      fullPath: '/login/oauth/callback'
+      preLoaderRoute: typeof LoginOauthCallbackImport
       parentRoute: typeof rootRoute
     }
   }
@@ -128,7 +128,7 @@ export interface FileRoutesByFullPath {
   '/forgot-password/reset': typeof ForgotPasswordResetRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/login': typeof LoginIndexRoute
-  '/login/google/callback': typeof LoginGoogleCallbackRoute
+  '/login/oauth/callback': typeof LoginOauthCallbackRoute
 }
 
 export interface FileRoutesByTo {
@@ -138,7 +138,7 @@ export interface FileRoutesByTo {
   '/forgot-password/reset': typeof ForgotPasswordResetRoute
   '/forgot-password': typeof ForgotPasswordIndexRoute
   '/login': typeof LoginIndexRoute
-  '/login/google/callback': typeof LoginGoogleCallbackRoute
+  '/login/oauth/callback': typeof LoginOauthCallbackRoute
 }
 
 export interface FileRoutesById {
@@ -149,7 +149,7 @@ export interface FileRoutesById {
   '/forgot-password/reset': typeof ForgotPasswordResetRoute
   '/forgot-password/': typeof ForgotPasswordIndexRoute
   '/login/': typeof LoginIndexRoute
-  '/login/google/callback': typeof LoginGoogleCallbackRoute
+  '/login/oauth/callback': typeof LoginOauthCallbackRoute
 }
 
 export interface FileRouteTypes {
@@ -161,7 +161,7 @@ export interface FileRouteTypes {
     | '/forgot-password/reset'
     | '/forgot-password'
     | '/login'
-    | '/login/google/callback'
+    | '/login/oauth/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -170,7 +170,7 @@ export interface FileRouteTypes {
     | '/forgot-password/reset'
     | '/forgot-password'
     | '/login'
-    | '/login/google/callback'
+    | '/login/oauth/callback'
   id:
     | '__root__'
     | '/'
@@ -179,7 +179,7 @@ export interface FileRouteTypes {
     | '/forgot-password/reset'
     | '/forgot-password/'
     | '/login/'
-    | '/login/google/callback'
+    | '/login/oauth/callback'
   fileRoutesById: FileRoutesById
 }
 
@@ -190,7 +190,7 @@ export interface RootRouteChildren {
   ForgotPasswordResetRoute: typeof ForgotPasswordResetRoute
   ForgotPasswordIndexRoute: typeof ForgotPasswordIndexRoute
   LoginIndexRoute: typeof LoginIndexRoute
-  LoginGoogleCallbackRoute: typeof LoginGoogleCallbackRoute
+  LoginOauthCallbackRoute: typeof LoginOauthCallbackRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -200,7 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   ForgotPasswordResetRoute: ForgotPasswordResetRoute,
   ForgotPasswordIndexRoute: ForgotPasswordIndexRoute,
   LoginIndexRoute: LoginIndexRoute,
-  LoginGoogleCallbackRoute: LoginGoogleCallbackRoute,
+  LoginOauthCallbackRoute: LoginOauthCallbackRoute,
 }
 
 export const routeTree = rootRoute
@@ -219,7 +219,7 @@ export const routeTree = rootRoute
         "/forgot-password/reset",
         "/forgot-password/",
         "/login/",
-        "/login/google/callback"
+        "/login/oauth/callback"
       ]
     },
     "/": {
@@ -240,8 +240,8 @@ export const routeTree = rootRoute
     "/login/": {
       "filePath": "login/index.tsx"
     },
-    "/login/google/callback": {
-      "filePath": "login/google/callback.tsx"
+    "/login/oauth/callback": {
+      "filePath": "login/oauth/callback.tsx"
     }
   }
 }

@@ -4,20 +4,20 @@ import { AppError } from '@/domain/entities/AppError';
 import { RequestHandler } from 'express';
 
 const requireAuth: RequestHandler = async (req, _res, next) => {
-  try {
-    // Get Access token from Auth header
-    const accessToken = extractBearerToken(req);
-    if (!accessToken) throw new AppError('Authentication token not found', 401);
+	try {
+		// Get Access token from Auth header
+		const accessToken = extractBearerToken(req);
+		if (!accessToken) throw new AppError('Authentication token not found', 401);
 
-    const verifiedToken = await verifyAccessToken(accessToken);
-    if (!verifiedToken?.id) throw new AppError('Invalid access token', 401);
+		const verifiedToken = await verifyAccessToken(accessToken);
+		if (!verifiedToken?.id) throw new AppError('Invalid access token', 403);
 
-    req.user = verifiedToken;
+		req.user = verifiedToken;
 
-    next();
-  } catch (error) {
-    next(error);
-  }
+		next();
+	} catch (error) {
+		next(error);
+	}
 };
 
 export default requireAuth;

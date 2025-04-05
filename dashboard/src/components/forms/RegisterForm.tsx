@@ -2,12 +2,12 @@ import { useForm } from '@tanstack/react-form';
 import { useRouter } from '@tanstack/react-router';
 import { z } from 'zod';
 import axios from 'axios';
-import useAuth from '../../hooks/useAuth';
+import useAuthContext from '../../hooks/useAuthContext';
 import User from '../../types/User';
 
 const RegisterForm = () => {
   const router = useRouter();
-  const auth = useAuth();
+  const auth = useAuthContext();
 
   const form = useForm({
     defaultValues: {

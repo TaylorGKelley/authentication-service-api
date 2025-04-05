@@ -1,12 +1,12 @@
 import { RouterProvider } from '@tanstack/react-router';
-import useAuth from './hooks/useAuth';
-import AuthContextProvider from './contexts/AuthContextProvider';
+import useAuthContext from './hooks/useAuthContext';
+import AuthProvider from './providers/AuthProvider';
 import { router } from './main';
 import AuthContextType from './types/AuthContextType';
-import CSRFContextProvider from './contexts/CSRFContextProvider';
+import CSRFProvider from './providers/CSRFProvider';
 
 function InnerApp() {
-  const auth = useAuth();
+  const auth = useAuthContext();
 
   return (
     <RouterProvider
@@ -18,11 +18,11 @@ function InnerApp() {
 
 function App() {
   return (
-    <AuthContextProvider>
-      <CSRFContextProvider>
+    <CSRFProvider>
+      <AuthProvider>
         <InnerApp />
-      </CSRFContextProvider>
-    </AuthContextProvider>
+      </AuthProvider>
+    </CSRFProvider>
   );
 }
 

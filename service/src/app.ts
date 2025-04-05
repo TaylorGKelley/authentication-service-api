@@ -15,11 +15,11 @@ app.use(cookieParser());
 app.use(express.json());
 
 const corsOptions = {
-	origin:
-		process.env.NODE_ENV === 'development' ? '*' : process.env.CLIENT_URL!,
+	origin: process.env.CLIENT_URL!,
 	credentials: true, // Allow cookies (refresh token) to be sent
 } as const;
 app.use(cors(corsOptions));
+
 app.use(helmet());
 app.use(generalLimiter);
 
@@ -41,7 +41,7 @@ app.use('/api/v1', authRouter);
 app.use('/api/v1/auth/google', googleOAuthRouter);
 app.use('/api/v1/users', myInfoRouter);
 
-app.use('*', (req, res) => {
+app.use('*', (_req, res) => {
 	res.status(404).json({ message: 'Not found' });
 });
 

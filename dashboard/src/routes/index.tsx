@@ -1,12 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
-import useAuth from '../hooks/useAuth';
+import useAuthContext from '../hooks/useAuthContext';
 
 export const Route = createFileRoute('/')({
   component: Index,
 });
 
 function Index() {
-  const auth = useAuth();
+  const auth = useAuthContext();
   return (
     <div className="p-2">
       <h3>

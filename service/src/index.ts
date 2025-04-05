@@ -5,7 +5,7 @@ import { AppError } from './domain/entities/AppError';
 const port = process.env.PORT || 7001;
 
 // Handle uncaught exceptions
-process.on('uncaughtException', (err, origin) => {
+process.on('uncaughtException', (err) => {
 	console.error(`Uncaught Exception: ${err.message}`);
 
 	if (process.env.NODE_ENV === 'development' && process.env.SHOW_ERROR_STACK)
