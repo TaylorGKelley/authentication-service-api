@@ -11,6 +11,8 @@ const RegisterForm = () => {
 
   const form = useForm({
     defaultValues: {
+      firstName: '',
+      lastName: '',
       email: '',
       password: '',
       passwordConfirm: '',
@@ -18,6 +20,8 @@ const RegisterForm = () => {
     validators: {
       onSubmit: z
         .object({
+          firstName: z.string().nonempty('First name is required'),
+          lastName: z.string().nonempty('Last name is required'),
           email: z.string().email('Invalid Email'),
           password: z
             .string()
@@ -57,7 +61,7 @@ const RegisterForm = () => {
           router.navigate({ to: '/' });
         }
       } catch (error) {
-        console.error(error);
+        console.error('Submission Failed', error);
       }
     },
   });
@@ -71,6 +75,44 @@ const RegisterForm = () => {
         }}
         className="flex max-w-sm flex-col gap-4"
       >
+        <div className="grid grid-cols-2 gap-4">
+          <form.Field
+            name="firstName"
+            children={(field) => (
+              <div className="flex flex-col">
+                <label htmlFor={field.name} className="text-sm">
+                  First Name:
+                </label>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  type="text"
+                  value={field.state.value}
+                  onChange={(e) => field.setValue(e.target.value)}
+                  className="rounded-xl border-1 border-slate-800 bg-white px-4 py-1 shadow-md"
+                />
+              </div>
+            )}
+          />
+          <form.Field
+            name="lastName"
+            children={(field) => (
+              <div className="flex flex-col">
+                <label htmlFor={field.name} className="text-sm">
+                  Last Name:
+                </label>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  type="text"
+                  value={field.state.value}
+                  onChange={(e) => field.setValue(e.target.value)}
+                  className="rounded-xl border-1 border-slate-800 bg-white px-4 py-1 shadow-md"
+                />
+              </div>
+            )}
+          />
+        </div>
         <form.Field
           name="email"
           children={(field) => (

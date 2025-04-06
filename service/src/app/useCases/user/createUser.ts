@@ -1,48 +1,67 @@
 import hashPassword from '@/app/utils/hashPassword';
 import { Role } from '@/domain/entities/Role';
-import { UserWithPassword } from '@/domain/entities/User';
+import { UserWithPassword, UserWithProfile } from '@/domain/entities/User';
 import { db } from '@/infrastructure/database';
 import {
-  roleTable,
-  userRoleTable,
-  userTable,
+	profileInfoTable,
+	roleTable,
+	userRoleTable,
+	userTable,
 } from '@/infrastructure/database/schema';
 import { eq } from 'drizzle-orm';
 
-const createUser = async (user: { email: string; password: string }) => {
-  const hashedPassword = await hashPassword(user.password);
+const createUser = async (user: {
+	firstName: string;
+	lastName: string;
+	email: string;
+	password: string;
+}) => {
+	const hashedPassword = await hashPassword(user.password);
 
-  const newUser = (
-    await db
-      .insert(userTable)
-      .values({
-        email: user.email,
-        password: hashedPassword,
-      })
-      .returning()
-  ).at(0) as UserWithPassword;
-  const defaultRoleId = (
-    await db
-      .select()
-      .from(roleTable)
-      .where(eq(roleTable.isDefault, true))
-      .limit(1)
-  ).at(0)?.id;
+	const newUser = (
+		await db
+			.insert(userTable)
+			.values({
+				email: user.email,
+				password: hashedPassword,
+			})
+			.returning()
+	).at(0) as UserWithPassword;
+	const profileInfo = (
+		await db
+			.insert(profileInfoTable)
+			.values({
+				userId: newUser.id,
+				firstName: user.firstName,
+				lastName: user.lastName,
+			})
+			.returning()
+	).at(0) as UserWithProfile;
 
-  const userRole = await db
-    .insert(userRoleTable)
-    .values({ userId: newUser.id, roleId: defaultRoleId || 1 })
-    .returning();
-  const role = await db
-    .select()
-    .from(roleTable)
-    .where(eq(roleTable.id, defaultRoleId || 0));
+	const createdUser = new UserWithProfile(newUser, profileInfo);
 
-  newUser.roles = [
-    { ...userRole.at(0), permissionLevel: role.at(0)?.permissionLevel },
-  ] as Role[];
+	const defaultRoleId = (
+		await db
+			.select()
+			.from(roleTable)
+			.where(eq(roleTable.isDefault, true))
+			.limit(1)
+	).at(0)?.id;
 
-  return newUser;
+	const userRole = await db
+		.insert(userRoleTable)
+		.values({ userId: createdUser.id, roleId: defaultRoleId || 1 })
+		.returning();
+	const role = await db
+		.select()
+		.from(roleTable)
+		.where(eq(roleTable.id, defaultRoleId || 0));
+
+	createdUser.roles = [
+		{ ...userRole.at(0), permissionLevel: role.at(0)?.permissionLevel },
+	] as Role[];
+
+	return createdUser;
 };
 
 export default createUser;
