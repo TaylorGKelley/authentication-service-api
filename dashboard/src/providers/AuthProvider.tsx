@@ -46,6 +46,22 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     if (csrfToken) fetchAuthState();
   }, [csrfToken, accessToken]);
 
+  // Add CSRF Token request interceptor to api(axios) config
+  useLayoutEffect(() => {
+    const csrfInterceptor = api.interceptors.request.use((config) => {
+      if (config.method !== 'get') {
+        // Adds header for all requests other than GET
+        config.headers!['X-CSRF-Token'] = csrfToken;
+      }
+
+      return config;
+    });
+
+    return () => {
+      api.interceptors.request.eject(csrfInterceptor);
+    };
+  }, [csrfToken]);
+
   // Add Access Token request interceptor to api(axios) config
   useLayoutEffect(() => {
     const authInterceptor = api.interceptors.request.use((config) => {
@@ -53,6 +69,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
         ._retry
         ? `Bearer ${accessToken}`
         : config.headers!.Authorization;
+
       return config;
     });
 
@@ -61,7 +78,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
     };
   }, [accessToken]);
 
-  // Add Refresh Token request interceptor to api(axios) config
+  // Add Refresh Token response interceptor to api(axios) config
   useLayoutEffect(() => {
     const refreshInterceptor = api.interceptors.response.use(
       (response) => response,
