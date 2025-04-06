@@ -9,7 +9,7 @@ import User from '../types/User';
 import AuthContext from '../contexts/AuthContext';
 import AuthContextType from '../types/AuthContextType';
 import api from '../lib/api';
-import useCSRFTokenContext from '../hooks/useCSRFTokenContext';
+import useCSRFContext from '../hooks/useCSRFContext';
 import { AxiosRequestConfig } from 'axios';
 
 type AxiosRequestConfigWithRetry = AxiosRequestConfig & {
@@ -21,7 +21,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string | null | undefined>();
   const [user, setUser] = useState<User | null | undefined>();
 
-  const csrfToken = useCSRFTokenContext();
+  const csrfToken = useCSRFContext();
 
   // fetch auth state and tokens
   useEffect(() => {
