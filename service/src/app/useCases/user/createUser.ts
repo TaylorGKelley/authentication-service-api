@@ -50,11 +50,6 @@ const createUser = async (user: {
       .where(eq(roleTable.isDefault, true))
       .limit(1)
   ).at(0)?.id;
-  console.log(
-    await db.select().from(roleTable)
-    // .where(eq(roleTable.isDefault, true))
-    // .limit(1)
-  );
 
   const userRole = await db
     .insert(userRoleTable)
@@ -64,7 +59,6 @@ const createUser = async (user: {
     .select()
     .from(roleTable)
     .where(eq(roleTable.id, defaultRoleId || 0));
-  console.log(userRole);
 
   createdUser.roles = [
     { ...userRole.at(0), permissionLevel: role.at(0)?.permissionLevel },
