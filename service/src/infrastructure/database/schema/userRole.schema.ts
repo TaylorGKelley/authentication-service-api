@@ -12,9 +12,9 @@ export const userRoleTable = pgTable('userRole', {
   }),
 });
 
-export const userRoleRelations = relations(userRoleTable, ({ one, many }) => {
+export const userRoleRelations = relations(userRoleTable, ({ one }) => {
   return {
-    user: many(userTable),
+    user: one(userTable),
     role: one(roleTable),
   };
 });

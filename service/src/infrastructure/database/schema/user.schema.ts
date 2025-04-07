@@ -7,7 +7,7 @@ import {
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { profileInfoTable, roleTable, userRoleTable } from '.';
+import { profileInfoTable, userRoleTable } from '.';
 
 export const userTable = pgTable('user', {
   id: serial('id').primaryKey(),
@@ -25,6 +25,6 @@ export const userTable = pgTable('user', {
 export const userRelations = relations(userTable, ({ one, many }) => {
   return {
     profileInfo: one(profileInfoTable),
-    roles: many(roleTable),
+    roles: many(userRoleTable),
   };
 });
