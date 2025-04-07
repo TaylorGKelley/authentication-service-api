@@ -173,6 +173,12 @@ const RegisterForm = () => {
         >
           Submit
         </button>
+        <a
+          href="http://localhost:7001/api/v1/auth/google"
+          className="w-full cursor-pointer rounded-xl bg-slate-800 px-6 py-1 text-center text-white no-underline shadow-md"
+        >
+          Register with Google
+        </a>
       </form>
     </div>
   );
