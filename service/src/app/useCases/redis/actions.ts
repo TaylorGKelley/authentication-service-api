@@ -53,12 +53,12 @@ export const validateRefreshTokenEntry = async (rid: UUID, userId: number) => {
   const tokenDetails = await redisClient.hgetall(`refreshToken:${token}`);
 
   if (!tokenDetails || !tokenDetails.userId) {
-    return undefined;
+    return false;
   }
 
   if (parseInt(tokenDetails.expiresAt, 10) < Date.now()) {
     await deleteRefreshTokenEntry(token);
-    return undefined;
+    return false;
   }
 
   return parseInt(tokenDetails.userId) === userId;

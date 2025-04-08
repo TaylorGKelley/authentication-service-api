@@ -108,6 +108,8 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
               },
             );
 
+            setAccessToken(response.data.accessToken);
+
             originalRequest.headers = {
               ...originalRequest.headers,
               Authorization: `Bearer ${response.data.accessToken}`,

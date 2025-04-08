@@ -23,6 +23,7 @@ import { isValidPasswordResetToken } from '@/app/useCases/user/passwordResetToke
 import updatePassword from '@/app/useCases/user/updatePassword';
 import { createPasswordResetToken } from '@/app/useCases/user/passwordResetToken/create';
 import getUserProfileInfo from '@/app/useCases/profile/getUserProfileInfo';
+import extractRefreshToken from '@/app/utils/extractRefreshToken';
 
 export const login: RequestHandler<
   any,
@@ -189,11 +190,11 @@ export const csrfToken: RequestHandler = async (req, res, next) => {
 export const logout: RequestHandler = async (req, res, next) => {
   try {
     const accessToken = extractBearerToken(req);
-    const { refreshToken } = req.cookies;
-    if (!refreshToken) throw new AppError('Refresh token not found', 401);
+    const rid = extractRefreshToken(req);
+    if (!rid) throw new AppError('Refresh token not found', 401);
 
     await deleteAccessTokenEntry(accessToken!);
-    await deleteRefreshTokenEntry(refreshToken?.rid);
+    await deleteRefreshTokenEntry(rid);
 
     res.clearCookie('refreshToken');
 

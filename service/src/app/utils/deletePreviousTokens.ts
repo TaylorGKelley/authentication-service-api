@@ -4,16 +4,14 @@ import {
   deleteRefreshTokenEntry,
 } from '../useCases/redis/actions';
 import { Request } from 'express';
-import jwt from 'jsonwebtoken';
-import RefreshTokenPayload from '@/domain/types/token/RefreshTokenPayload';
+import extractRefreshToken from './extractRefreshToken';
 
 const deletePreviousTokens = async (req: Request) => {
   const accessToken = extractBearerToken(req);
-  const { refreshToken } = req.cookies;
-  const { rid } = jwt.decode(refreshToken) as RefreshTokenPayload;
+  const rid = extractRefreshToken(req);
 
   if (accessToken) await deleteAccessTokenEntry(accessToken);
-  if (refreshToken) await deleteRefreshTokenEntry(rid);
+  if (rid) await deleteRefreshTokenEntry(rid);
 };
 
 export default deletePreviousTokens;
