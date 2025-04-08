@@ -1,31 +1,36 @@
 import { UUID } from 'crypto';
 import redisClient from '@/infrastructure/configurations/redis/client';
+import hashToken from '@/app/utils/hashToken';
 
 export const createRefreshTokenEntry = async (
   rid: UUID,
   userId: number,
   expirationTimeSeconds: number
 ) => {
+  const token = await hashToken(rid);
+
   // Store token details in hash set
-  await redisClient.hset(`refreshToken:${rid}`, {
+  await redisClient.hset(`refreshToken:${token}`, {
     userId,
     expiresAt: expirationTimeSeconds * 1000,
   });
 
-  await redisClient.sadd(`userTokens:${userId}`, rid);
+  await redisClient.sadd(`userTokens:${userId}`, token);
 };
 
-export const deleteRefreshTokenEntry = async (rid: UUID) => {
+export const deleteRefreshTokenEntry = async (rid: UUID | string) => {
+  const token = await hashToken(rid);
+
   // Retrieve token details
-  const tokenDetails = await redisClient.hgetall(`refreshToken:${rid}`);
+  const tokenDetails = await redisClient.hgetall(`refreshToken:${token}`);
 
   if (tokenDetails?.userId) {
     // Remove the token ID from the user's set
-    await redisClient.srem(`userTokens:${tokenDetails.userId}`, rid);
+    await redisClient.srem(`userTokens:${tokenDetails.userId}`, token);
   }
 
   // Delete the token hash
-  await redisClient.del(`refreshToken:${rid}`);
+  await redisClient.del(`refreshToken:${token}`);
 };
 
 export const deleteAllUserRefreshTokenEntries = async (userId: number) => {
@@ -43,26 +48,30 @@ export const deleteAllUserRefreshTokenEntries = async (userId: number) => {
 };
 
 export const validateRefreshTokenEntry = async (rid: UUID, userId: number) => {
-  const tokenDetails = await redisClient.hgetall(`refreshToken:${rid}`);
+  const token = await hashToken(rid);
+
+  const tokenDetails = await redisClient.hgetall(`refreshToken:${token}`);
 
   if (!tokenDetails || !tokenDetails.userId) {
     return undefined;
   }
 
   if (parseInt(tokenDetails.expiresAt, 10) < Date.now()) {
-    await deleteRefreshTokenEntry(rid);
+    await deleteRefreshTokenEntry(token);
     return undefined;
   }
 
-  return tokenDetails.userId;
+  return parseInt(tokenDetails.userId) === userId;
 };
 
 export const createAccessTokenEntry = async (
   accessToken: string,
   expirationTimeSeconds: number
 ) => {
+  const token = await hashToken(accessToken);
+
   return await redisClient.set(
-    `accessToken:${accessToken}`,
+    `accessToken:${token}`,
     '1',
     'EX',
     expirationTimeSeconds
@@ -70,11 +79,14 @@ export const createAccessTokenEntry = async (
 };
 
 export const deleteAccessTokenEntry = async (accessToken: string) => {
-  return await redisClient.del(`accessToken:${accessToken}`);
+  const token = await hashToken(accessToken);
+  return await redisClient.del(`accessToken:${token}`);
 };
 
 export const validateAccessTokenEntry = async (accessToken: string) => {
-  const result = await redisClient.exists(`accessToken:${accessToken}`);
+  const token = await hashToken(accessToken);
+
+  const result = await redisClient.exists(`accessToken:${token}`);
 
   return result === 1; // Record found: 1, Record not found: 0
 };
