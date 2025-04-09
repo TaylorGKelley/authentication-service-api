@@ -1,9 +1,9 @@
 import { useForm } from '@tanstack/react-form';
 import { useRouter } from '@tanstack/react-router';
 import { z } from 'zod';
-import axios from 'axios';
 import useAuthContext from '../../hooks/useAuthContext';
 import User from '../../types/User';
+import api from '../../lib/api';
 
 const RegisterForm = () => {
   const router = useRouter();
@@ -37,7 +37,7 @@ const RegisterForm = () => {
     },
     onSubmit: async ({ value }) => {
       try {
-        const response = await axios.post(
+        const response = await api.post(
           'http://localhost:7001/api/v1/register',
           {
             ...value,

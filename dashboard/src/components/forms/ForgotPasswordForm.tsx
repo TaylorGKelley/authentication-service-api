@@ -1,7 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { useRouter } from '@tanstack/react-router';
 import { z } from 'zod';
-import axios from 'axios';
+import api from '../../lib/api';
 
 const ForgotPasswordForm = () => {
   const router = useRouter();
@@ -18,7 +18,7 @@ const ForgotPasswordForm = () => {
     onSubmit: async ({ value }) => {
       try {
         // Make API request to backend GET /send-reset-password with body of { email }
-        await axios.get('http://localhost:7001/api/v1/send-reset-password', {
+        await api.get('http://localhost:7001/api/v1/send-reset-password', {
           params: {
             email: value.email,
           },

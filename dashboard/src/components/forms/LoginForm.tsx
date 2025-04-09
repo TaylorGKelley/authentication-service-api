@@ -1,9 +1,9 @@
 import { useForm } from '@tanstack/react-form';
 import { Link, useRouter, useSearch } from '@tanstack/react-router';
 import { z } from 'zod';
-import axios from 'axios';
 import useAuthContext from '../../hooks/useAuthContext';
 import User from '../../types/User';
+import api from '../../lib/api';
 
 const LoginForm = () => {
   const router = useRouter();
@@ -23,7 +23,7 @@ const LoginForm = () => {
     },
     onSubmit: async ({ value }) => {
       try {
-        const response = await axios.post(
+        const response = await api.post(
           'http://localhost:7001/api/v1/login',
           {
             username: value.email,
