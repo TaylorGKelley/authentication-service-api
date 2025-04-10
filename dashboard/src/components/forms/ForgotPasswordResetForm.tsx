@@ -1,7 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { useRouter, useSearch } from '@tanstack/react-router';
 import { z } from 'zod';
-import axios from 'axios';
+import api from '../../lib/api';
 
 const ForgotPasswordResetForm = () => {
   const router = useRouter();
@@ -31,7 +31,7 @@ const ForgotPasswordResetForm = () => {
       try {
         if (resetToken === undefined) throw new Error('No reset token');
 
-        await axios.post('http://localhost:7001/api/v1/reset-password', {
+        await api.post('http://localhost:7001/api/v1/reset-password', {
           resetToken,
           ...value,
         });
