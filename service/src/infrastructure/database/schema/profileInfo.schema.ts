@@ -3,7 +3,7 @@ import bytea from './types/bytea';
 import { userTable } from '.';
 import phoneNumber from './types/phoneNumber';
 
-export const profileInfoTable = pgTable('profileInfo', {
+export const profileInfoTable = pgTable('profile_info', {
   id: serial('id').primaryKey(),
   userId: serial('user_id').references(() => userTable.id, {
     onDelete: 'cascade',
