@@ -6,7 +6,7 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 
-export const permissionLevelEnum = pgEnum('permissionLevel', [
+export const permissionLevelEnum = pgEnum('permission_level', [
   'Owner',
   'Admin',
   'Report User',

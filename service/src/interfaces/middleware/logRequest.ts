@@ -11,7 +11,7 @@ export const logRequest: RequestHandler = async (req, _res, next) => {
     ip = 'localhost';
   }
 
-  logRequestUseCase(ip, body);
+  // logRequestUseCase(ip, body);
 
   next();
 };
