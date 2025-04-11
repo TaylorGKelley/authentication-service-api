@@ -16,11 +16,8 @@ import {
   refreshTokenLimiter,
   registerLimiter,
 } from '../middleware/rateLimiters';
-import { logRequest } from '../middleware/logRequest';
 
 const authRouter = Router();
-
-authRouter.use(logRequest);
 
 authRouter.post('/login', loginLimiter, login);
 authRouter.post('/register', registerLimiter, register);
