@@ -6,9 +6,11 @@ import {
 	text,
 	pgEnum,
 	json,
+	integer,
 } from 'drizzle-orm/pg-core';
 import { userTable } from './user.schema';
 import { relations } from 'drizzle-orm';
+import { userActivityLogTable } from './userActivityLog.schema';
 
 export const eventTypeEnum = pgEnum('eventType', ['request', 'error', 'login']);
 
@@ -20,10 +22,6 @@ export const eventStatusEnum = pgEnum('eventStatus', [
 
 export const activityLogTable = pgTable('activity_log', {
 	id: serial('id').primaryKey(),
-	// (optional) Related User
-	userId: serial('user_id').references(() => userTable.id, {
-		onDelete: 'cascade',
-	}),
 	// Device Tracking
 	ip: varchar('ip', { length: 16 }).notNull(),
 	userAgent: varchar('user_agent', { length: 256 }).notNull(),
@@ -37,14 +35,14 @@ export const activityLogTable = pgTable('activity_log', {
 	// Extra Data
 	additionalMetadata: json('additional_metadata'),
 	// Timestamp
-	createdAt: timestamp('created_at', { mode: 'string' }).defaultNow(),
+	createdAt: timestamp('created_at').defaultNow(),
 });
 
 export const activityLogTableRelations = relations(
 	activityLogTable,
 	({ one }) => {
 		return {
-			user: one(userTable),
+			user: one(userActivityLogTable),
 		};
 	}
 );
