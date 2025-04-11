@@ -1,15 +1,15 @@
-import { useForm } from '@tanstack/react-form';
 import { useRouter } from '@tanstack/react-router';
 import { z } from 'zod';
 import useAuthContext from '../../hooks/useAuthContext';
 import User from '../../types/User';
 import axios from 'axios';
+import { useAppForm } from '../../hooks/useAppForm';
 
 const RegisterForm = () => {
   const router = useRouter();
   const auth = useAuthContext();
 
-  const form = useForm({
+  const form = useAppForm({
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -36,32 +36,30 @@ const RegisterForm = () => {
         }),
     },
     onSubmit: async ({ value }) => {
-      try {
-        const response = await axios.post(
-          'http://localhost:7001/api/v1/register',
-          {
-            ...value,
-          },
-          {
-            withCredentials: true,
-          },
-        );
+      const response = await axios.post(
+        'http://localhost:7001/api/v1/register',
+        {
+          ...value,
+        },
+        {
+          withCredentials: true,
+        },
+      );
 
-        if (response.status === 201) {
-          const { accessToken, user } = response.data as {
-            accessToken: string;
-            user: User;
-          };
+      if (response.status === 201) {
+        const { accessToken, user } = response.data as {
+          accessToken: string;
+          user: User;
+        };
 
-          auth.login({
-            accessToken: accessToken,
-            user,
-          });
+        auth.login({
+          accessToken: accessToken,
+          user,
+        });
 
-          router.navigate({ to: '/' });
-        }
-      } catch (error) {
-        console.error('Submission Failed', error);
+        router.navigate({ to: '/' });
+      } else {
+        return 'Invalid Email or Password';
       }
     },
   });
@@ -167,12 +165,10 @@ const RegisterForm = () => {
             </div>
           )}
         />
-        <button
-          type="submit"
-          className="w-full cursor-pointer rounded-xl bg-slate-800 px-6 py-1 text-center text-white shadow-md"
-        >
-          Submit
-        </button>
+        <form.SubmitButton>Submit</form.SubmitButton>
+        {form.state.errors.map((error) => (
+          <p>{error?.toString()}</p>
+        ))}
         <a
           href="http://localhost:7001/api/v1/auth/google"
           className="w-full cursor-pointer rounded-xl bg-slate-800 px-6 py-1 text-center text-white no-underline shadow-md"
