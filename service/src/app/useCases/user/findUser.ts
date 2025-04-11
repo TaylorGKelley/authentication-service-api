@@ -48,9 +48,9 @@ const findUser = async (params: {
       roles: results.map(
         (result) =>
           ({
-            ...result.userRole,
+            ...result.user_role,
             permissionLevel: results
-              .filter((role) => role.role.id === result.userRole.roleId)
+              .filter((role) => role.role.id === result.user_role.roleId)
               .at(0)?.role.permissionLevel,
           } as Role)
       ),

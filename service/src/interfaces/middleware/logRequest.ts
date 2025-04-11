@@ -8,7 +8,7 @@ export const logRequest: RequestHandler = async (req, _res, next) => {
   if (Array.isArray(ip)) {
     ip = ip.join('.');
   } else if (ip === '::1') {
-    ip = 'localhost';
+    ip = '127.0.0.1';
   }
 
   // logRequestUseCase(ip, body);
