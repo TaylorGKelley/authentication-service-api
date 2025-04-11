@@ -9,6 +9,8 @@ import { errorHandler } from './interfaces/controllers/error.controller';
 import authRouter from './interfaces/routers/auth.router';
 import myInfoRouter from './interfaces/routers/myInfo.router';
 import googleOAuthRouter from './interfaces/routers/googleOAuth.router';
+import { logRequest } from './interfaces/middleware/logRequest';
+import logViewRouter from './interfaces/routers/logView.router';
 
 const app = express();
 app.use(cookieParser());
@@ -37,9 +39,12 @@ app.use(
 
 app.use(passport.initialize());
 
+app.use(logRequest);
+
 app.use('/api/v1', authRouter);
 app.use('/api/v1/auth/google', googleOAuthRouter);
 app.use('/api/v1/users', myInfoRouter);
+app.use('/api/v1/logs', logViewRouter);
 
 app.use('*', (_req, res) => {
 	res.status(404).json({ message: 'Not found' });

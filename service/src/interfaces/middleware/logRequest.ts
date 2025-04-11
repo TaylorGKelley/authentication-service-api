@@ -1,17 +1,34 @@
 import { RequestHandler } from 'express';
 import { logRequest as logRequestUseCase } from '@/app/useCases/logging/logRequest';
+import { User } from '@/domain/entities/User';
 
-export const logRequest: RequestHandler = async (req, _res, next) => {
-  let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-  const body = req.body;
+export const logRequest: RequestHandler = async (req, res, next) => {
+	const requestTime = Date.now();
 
-  if (Array.isArray(ip)) {
-    ip = ip.join('.');
-  } else if (ip === '::1') {
-    ip = '127.0.0.1';
-  }
+	res.on('finish', async () => {
+		const reqDuration = Date.now() - requestTime;
 
-  // logRequestUseCase(ip, body);
+		const ip =
+			req.ip ||
+			req.headers['x-forwarded-for']?.toString() ||
+			req.socket.remoteAddress ||
+			'unknown';
+		const userAgent = req.headers['user-agent'] || 'unknown';
 
-  next();
+		await logRequestUseCase({
+			userId: (req.user as User | undefined)?.id,
+			ip,
+			userAgent,
+			eventType: 'request',
+			eventStatus: res.statusCode < 400 ? 'success' : 'failure',
+			requestPath: req.originalUrl,
+			additionalMetadata: {
+				method: req.method,
+				statusCode: res.statusCode,
+				durationMs: reqDuration,
+			},
+		});
+	});
+
+	next();
 };
