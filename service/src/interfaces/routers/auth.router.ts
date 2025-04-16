@@ -10,7 +10,6 @@ import {
   resetPassword,
   csrfToken,
 } from '@/interfaces/controllers/auth.controller';
-import requireAuth from '../middleware/requireAuth';
 import {
   loginLimiter,
   refreshTokenLimiter,
@@ -22,13 +21,13 @@ const authRouter = Router();
 authRouter.post('/login', loginLimiter, login);
 authRouter.post('/register', registerLimiter, register);
 
-authRouter.get('/check-auth', requireAuth, checkAuthentication);
+authRouter.get('/check-auth', checkAuthentication);
 authRouter.get('/csrf-token', csrfToken);
 
 authRouter.post('/refresh-token', refreshTokenLimiter, refreshToken);
 
-authRouter.delete('/logout', requireAuth, logout);
-authRouter.delete('/logout/all', requireAuth, logoutAllDevices);
+authRouter.delete('/logout', logout);
+authRouter.delete('/logout/all', logoutAllDevices);
 
 authRouter.get('/send-reset-password', resetPasswordSender);
 authRouter.post('/reset-password', resetPassword);

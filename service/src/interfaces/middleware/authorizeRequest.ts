@@ -1,29 +1,36 @@
+import getAllPermissions from '@/app/useCases/permissions/getAllPermissions';
+import getUserRoles from '@/app/useCases/user/getUserRoles';
 import { AppError } from '@/domain/entities/AppError';
+import { User } from '@/domain/entities/User';
 import { RequestHandler } from 'express';
+import { match } from 'path-to-regexp';
 
 const authorizeRequest: RequestHandler = async (req, res, next) => {
-  const method = req.method.toUpperCase();
-  const path = req.path;
+  const { method, originalUrl: route } = req;
 
   try {
-    const permissions = await getAllPermissionsFromCacheOrDB(); // [{ routePattern, method, roles }]
-    const matchingPermission = permissions.find((perm) => {
-      const isMethodMatch = perm.method.toUpperCase() === method;
-      const isPathMatch = match(perm.routePattern)(path);
+    const permissions = await getAllPermissions();
+    const matchingPermissions = permissions.filter((permission) => {
+      const isMethodMatch =
+        permission.method.toUpperCase() === method.toUpperCase();
+      const isPathMatch = match(permission.route)(route);
       return isMethodMatch && isPathMatch;
     });
-    if (!matchingPermission) {
+
+    if (matchingPermissions?.length === 0) {
       // Public route
       return next();
     }
-    const user = req.user;
-    if (!user)
-      return res.status(401).json({ message: 'Authentication required' });
-    // const userRoles = await getUserRolesFromCacheOrDB(user.id);
+
+    const user = req.user as User;
+    if (!user?.id) throw new AppError('Authentication required', 401);
+
+    const userRoles = await getUserRoles(user.id!);
     const hasAccess = userRoles.some((role) =>
-      matchingPermission.roles.includes(role)
+      matchingPermissions.map((role) => role.roleId).includes(role.roleId!)
     );
-    if (!hasAccess) return res.status(403).json({ message: 'Forbidden' });
+    if (!hasAccess) throw new AppError('Forbidden', 403);
+
     next();
   } catch (error) {
     next(error);

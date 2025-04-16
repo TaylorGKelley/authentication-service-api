@@ -1,4 +1,5 @@
 import {
+  permissionTable,
   profileInfoTable,
   roleTable,
   userRoleTable,
@@ -23,14 +24,9 @@ export const profileInfoData: (typeof profileInfoTable.$inferInsert)[] = [
 
 export const userRolesData: (typeof userRoleTable.$inferInsert)[] = [
   {
-    id: 1,
+    id: 0,
     userId: 1,
-    roleId: 1,
-  },
-  {
-    id: 2,
-    userId: 1,
-    roleId: 2,
+    roleId: 0,
   },
 ];
 
@@ -39,5 +35,15 @@ export const rolesData: (typeof roleTable.$inferInsert)[] = [
     id: 0,
     name: 'Super Admin',
     description: 'Super admin account',
+  },
+];
+
+export const permissionsData: (typeof permissionTable.$inferInsert)[] = [
+  {
+    id: 0,
+    route: '/api/v1/logs',
+    method: 'GET',
+    name: 'Get All Logs',
+    roleId: 0,
   },
 ];

@@ -17,9 +17,9 @@ const authenticateRequest: RequestHandler = async (req, _res, next) => {
     }
     req.user = {
       id: verifiedToken.id,
-      roles: verifiedToken.roleIds.map((id) => {
-        id;
-      }),
+      // roles: verifiedToken.roleIds.map((id) => {
+      //   id;
+      // }),
     };
 
     next();

@@ -1,11 +1,8 @@
 import { Router } from 'express';
-import requireAuth from '../middleware/requireAuth';
 import { getMyInfo, updateMyInfo } from '../controllers/myInfo.controller';
 
 const myInfoRouter = Router();
 
-myInfoRouter
-  .get('/me', requireAuth, getMyInfo)
-  .patch('/me', requireAuth, updateMyInfo);
+myInfoRouter.get('/me', getMyInfo).patch('/me', updateMyInfo);
 
 export default myInfoRouter;
