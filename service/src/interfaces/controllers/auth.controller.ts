@@ -140,6 +140,7 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
     if (!refreshToken) throw new AppError('Refresh token not found', 401);
 
     const verifiedRefreshToken = await verifyRefreshToken(refreshToken);
+
     const user = await findUser({ id: verifiedRefreshToken.id });
 
     // delete the current tokens

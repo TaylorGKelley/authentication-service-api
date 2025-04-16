@@ -36,13 +36,8 @@ export const userRolesData: (typeof userRoleTable.$inferInsert)[] = [
 
 export const rolesData: (typeof roleTable.$inferInsert)[] = [
   {
-    id: 1,
-    role: 'admin',
-    permissionLevel: 'Admin',
-  },
-  {
-    id: 2,
-    role: 'user',
-    permissionLevel: 'User',
+    id: 0,
+    name: 'Super Admin',
+    description: 'Super admin account',
   },
 ];

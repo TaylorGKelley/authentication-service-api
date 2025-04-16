@@ -25,25 +25,25 @@ const createGoogleUser = async (user: {
   ).at(0) as UserWithPassword;
 
   // Insert default role
-  const defaultRoleId = (
-    await db
-      .select()
-      .from(roleTable)
-      .where(eq(roleTable.isDefault, true))
-      .limit(1)
-  ).at(0)?.id;
-  const userRole = await db
-    .insert(userRoleTable)
-    .values({ userId: newUser.id, roleId: defaultRoleId || 1 })
-    .returning();
-  const role = await db
-    .select()
-    .from(roleTable)
-    .where(eq(roleTable.id, defaultRoleId || 0));
+  // const defaultRoleId = (
+  //   await db
+  //     .select()
+  //     .from(roleTable)
+  //     .where(eq(roleTable.isDefault, true))
+  //     .limit(1)
+  // ).at(0)?.id;
+  // const userRole = await db
+  //   .insert(userRoleTable)
+  //   .values({ userId: newUser.id, roleId: defaultRoleId || 1 })
+  //   .returning();
+  // const role = await db
+  //   .select()
+  //   .from(roleTable)
+  //   .where(eq(roleTable.id, defaultRoleId || 0));
 
-  newUser.roles = [
-    { ...userRole.at(0), permissionLevel: role.at(0)?.permissionLevel },
-  ] as Role[];
+  // newUser.roles = [
+  //   { ...userRole.at(0), permissionLevel: role.at(0)?.permissionLevel },
+  // ] as Role[];
 
   return newUser;
 };

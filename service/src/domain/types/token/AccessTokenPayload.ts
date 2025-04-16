@@ -1,11 +1,9 @@
-import { Role } from '@/domain/entities/Role';
-
 export default class AccessTokenPayload {
   public id: number;
-  public roles: Role[];
+  public roleIds: number[];
 
-  constructor(payload: { id: number; roles: Role[] }) {
+  constructor(payload: { id: number; roleIds: number[] }) {
     this.id = payload.id;
-    this.roles = payload.roles;
+    this.roleIds = payload.roleIds;
   }
 }

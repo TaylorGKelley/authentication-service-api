@@ -12,7 +12,6 @@ export const generateAccessToken = async (user: Partial<User>) => {
     const accessToken = jwt.sign(
       {
         id: user.id,
-        roles: user.roles,
       } as AccessTokenPayload,
       process.env.ACCESS_TOKEN_SECRET!,
       { expiresIn: '15m' }

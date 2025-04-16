@@ -43,26 +43,26 @@ const createUser = async (user: {
     lastName: profileInfo.lastName,
   });
 
-  const defaultRoleId = (
-    await db
-      .select()
-      .from(roleTable)
-      .where(eq(roleTable.isDefault, true))
-      .limit(1)
-  ).at(0)?.id;
+  // const defaultRoleId = (
+  //   await db
+  //     .select()
+  //     .from(roleTable)
+  //     .where(eq(roleTable.isDefault, true))
+  //     .limit(1)
+  // ).at(0)?.id;
 
-  const userRole = await db
-    .insert(userRoleTable)
-    .values({ userId: createdUser.id, roleId: defaultRoleId || 1 })
-    .returning();
-  const role = await db
-    .select()
-    .from(roleTable)
-    .where(eq(roleTable.id, defaultRoleId || 0));
+  // const userRole = await db
+  //   .insert(userRoleTable)
+  //   .values({ userId: createdUser.id, roleId: defaultRoleId || 1 })
+  //   .returning();
+  // const role = await db
+  //   .select()
+  //   .from(roleTable)
+  //   .where(eq(roleTable.id, defaultRoleId || 0));
 
-  createdUser.roles = [
-    { ...userRole.at(0), permissionLevel: role.at(0)?.permissionLevel },
-  ] as Role[];
+  // createdUser.roles = [
+  //   { ...userRole.at(0), permissionLevel: role.at(0)?.permissionLevel },
+  // ] as Role[];
 
   return createdUser;
 };
