@@ -12,7 +12,7 @@ import googleOAuthRouter from './interfaces/routers/googleOAuth.router';
 import { logRequest } from './interfaces/middleware/logRequest';
 import logViewRouter from './interfaces/routers/logView.router';
 import authenticateRequest from './interfaces/middleware/authenticateRequest';
-import authorizeRequest from './interfaces/middleware/authorizeRequest';
+import authorizeRequest from './interfaces/middleware/authorize';
 
 const app = express();
 app.use(cookieParser());
@@ -43,7 +43,7 @@ app.use(passport.initialize());
 
 app.use(logRequest);
 app.use(authenticateRequest);
-app.use(authorizeRequest);
+// app.use(authorizeRequest); // * move middleware to individual routes that are protected by it
 
 app.use('/api/v1', authRouter);
 app.use('/api/v1/auth/google', googleOAuthRouter);

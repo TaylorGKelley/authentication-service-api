@@ -1,4 +1,5 @@
 export * from './activityLog.schema';
+export * from './linkedService.schema';
 export * from './passwordReset.schema';
 export * from './permission.schema';
 export * from './profileInfo.schema';
