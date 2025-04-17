@@ -13,6 +13,7 @@ import { logRequest } from './interfaces/middleware/logRequest';
 import logViewRouter from './interfaces/routers/logView.router';
 import authenticateRequest from './interfaces/middleware/authenticateRequest';
 import authorizeRequest from './interfaces/middleware/authorize';
+import permissionRouter from './interfaces/routers/permission.router';
 
 const app = express();
 app.use(cookieParser());
@@ -49,6 +50,7 @@ app.use('/api/v1', authRouter);
 app.use('/api/v1/auth/google', googleOAuthRouter);
 app.use('/api/v1/users', myInfoRouter);
 app.use('/api/v1/logs', logViewRouter);
+app.use('/api/v1/permissions', permissionRouter);
 
 app.use('*', (_req, res) => {
   res.status(404).json({ message: 'Not found' });
