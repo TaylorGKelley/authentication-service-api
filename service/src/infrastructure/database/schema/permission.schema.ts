@@ -1,14 +1,6 @@
-import { integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
-import { roleTable } from './role.schema';
+import { pgTable, serial, varchar } from 'drizzle-orm/pg-core';
 
 export const permissionTable = pgTable('permission', {
-  id: serial('id').primaryKey(),
-  route: varchar('route', { length: 128 }).notNull(),
-  method: varchar('method', { length: 8 }).notNull(),
-  name: varchar('description', { length: 256 }).notNull(),
-  roleId: integer('role_id')
-    .references(() => roleTable.id, {
-      onDelete: 'cascade',
-    })
-    .notNull(),
+	id: serial('id').primaryKey(),
+	name: varchar('description', { length: 128 }).notNull(),
 });
