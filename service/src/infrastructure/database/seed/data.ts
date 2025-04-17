@@ -26,7 +26,7 @@ export const profileInfoData: (typeof profileInfoTable.$inferInsert)[] = [
 ];
 
 // * serivces
-export const linkedServiceData: (typeof linkedServiceTable.$inferInsert)[] = [
+export const linkedServicesData: (typeof linkedServiceTable.$inferInsert)[] = [
   {
     id: 0,
     name: 'internal',
@@ -38,17 +38,17 @@ export const permissionsData: (typeof permissionTable.$inferInsert)[] = [
   {
     id: 0,
     name: 'user:read',
-    linkedServiceId: linkedServiceData[0].id!,
+    linkedServiceId: linkedServicesData[0].id!,
   },
   {
     id: 1,
     name: 'admin:read:all',
-    linkedServiceId: linkedServiceData[0].id!,
+    linkedServiceId: linkedServicesData[0].id!,
   },
   {
     id: 2,
     name: 'admin:write:all',
-    linkedServiceId: linkedServiceData[0].id!,
+    linkedServiceId: linkedServicesData[0].id!,
   },
 ];
 
@@ -56,7 +56,7 @@ export const rolesData: (typeof roleTable.$inferInsert)[] = [
   {
     id: 0,
     name: 'Super Admin',
-    linkedServiceId: linkedServiceData[0].id!,
+    linkedServiceId: linkedServicesData[0].id!,
   },
 ];
 

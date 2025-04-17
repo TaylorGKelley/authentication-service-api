@@ -5,25 +5,30 @@ import {
   profileInfoTable,
   roleTable,
   userRoleTable,
-  activityLogTable,
   permissionTable,
+  linkedServiceTable,
+  activityLogTable,
 } from '../schema';
 import {
+  linkedServicesData,
   permissionsData,
   profileInfoData,
+  rolePermissionsData,
   rolesData,
   userRolesData,
   usersData,
 } from './data';
+import { rolePermissionTable } from '../schema/rolePermission.schema';
 
 async function main() {
   try {
-    await db.delete(activityLogTable);
     await db.delete(userTable);
     await db.delete(profileInfoTable);
+    await db.delete(linkedServiceTable);
     await db.delete(permissionTable);
     await db.delete(roleTable);
     await db.delete(userRoleTable);
+    await db.delete(rolePermissionTable);
     await db.delete(activityLogTable);
 
     await db.insert(userTable).values(
@@ -36,9 +41,11 @@ async function main() {
       )
     );
     await db.insert(profileInfoTable).values(profileInfoData);
-    await db.insert(roleTable).values(rolesData);
+    await db.insert(linkedServiceTable).values(linkedServicesData);
     await db.insert(permissionTable).values(permissionsData);
+    await db.insert(roleTable).values(rolesData);
     await db.insert(userRoleTable).values(userRolesData);
+    await db.insert(rolePermissionTable).values(rolePermissionsData);
 
     console.log('Seed data inserted successfully');
     process.exit(0);
