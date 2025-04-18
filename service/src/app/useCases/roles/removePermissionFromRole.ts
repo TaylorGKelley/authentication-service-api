@@ -3,8 +3,8 @@ import { rolePermissionTable } from '@/infrastructure/database/schema';
 import { and, eq } from 'drizzle-orm';
 
 const removePermissionFromRole = async (
-	permissionId: number,
-	roleId: number
+	roleId: number,
+	permissionId: number
 ) => {
 	const result = await db
 		.delete(rolePermissionTable)

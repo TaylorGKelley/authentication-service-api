@@ -109,19 +109,18 @@ export const deleteRole: RequestHandler<{
 export const addPermissionToRole: RequestHandler<
 	any,
 	any,
-	{ userId: number; roleId: number }
+	{ roleId: number; permissionId: number }
 > = async (req, res, next) => {
-	const { userId, roleId } = req.body;
-
+	const { roleId, permissionId } = req.body;
 	try {
-		const result = await addPermissionToRoleUseCase(userId, roleId);
+		const result = await addPermissionToRoleUseCase(roleId, permissionId);
 
 		if (!result) {
 			throw new AppError('Role already has that permission', 409);
 		}
 
 		res.status(200).json({
-			message: 'User added to role',
+			message: 'Permission added to role',
 		});
 	} catch (error) {
 		next(error);
@@ -131,12 +130,12 @@ export const addPermissionToRole: RequestHandler<
 export const removePermissionFromRole: RequestHandler<
 	any,
 	any,
-	{ userId: number; roleId: number }
+	{ permissionId: number; roleId: number }
 > = async (req, res, next) => {
-	const { userId, roleId } = req.body;
+	const { roleId, permissionId } = req.body;
 
 	try {
-		await removePermissionFromRoleUseCase(userId, roleId);
+		await removePermissionFromRoleUseCase(roleId, permissionId);
 
 		res.status(200).json({
 			message: 'Permission removed from role',
