@@ -1,15 +1,31 @@
-import { RegisteredPermission } from '@/domain/data/permissions';
 import { RequestHandler } from 'express';
+import { User } from '@/domain/entities/User';
+import { getPermissionsForUser as getPermissionsForUserUseCase } from '@/app/useCases/permissionSync';
+import { AppError } from '@/domain/entities/AppError';
 
-const authorize: (permissions: RegisteredPermission[]) => RequestHandler =
-  (permissions) => async (req, res, next) => {
-    try {
-      // ! Make authorize middleware
+const authorize: (allowedPermissions: string[]) => RequestHandler =
+	(allowedPermissions) => async (req, res, next) => {
+		try {
+			if (!req.user) {
+				throw new AppError('Unauthorized', 401);
+			}
 
-      next();
-    } catch (error) {
-      next(error);
-    }
-  };
+			const permissions = await getPermissionsForUserUseCase(
+				(req.user as User).id!
+			);
+
+			const isAllowed = allowedPermissions.some((allowedPermission) =>
+				permissions.includes(allowedPermission)
+			);
+
+			if (!isAllowed) {
+				throw new AppError('Forbidden', 403);
+			}
+
+			next();
+		} catch (error) {
+			next(error);
+		}
+	};
 
 export default authorize;

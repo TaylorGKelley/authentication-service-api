@@ -112,9 +112,10 @@ export const addPermissionToRole: RequestHandler<
 	{ roleId: number; permissionId: number }
 > = async (req, res, next) => {
 	const { roleId, permissionId } = req.body;
+
 	try {
 		const result = await addPermissionToRoleUseCase(roleId, permissionId);
-		console.log(result);
+
 		if (!result) {
 			throw new AppError('Role already has that permission', 409);
 		}

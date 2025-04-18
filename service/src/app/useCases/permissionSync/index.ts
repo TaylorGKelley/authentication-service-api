@@ -2,6 +2,7 @@ import { db } from '@/infrastructure/database';
 import redisClient from '@/infrastructure/configurations/redis/client';
 import {
 	permissionTable,
+	rolePermissionTable,
 	userRoleTable,
 } from '@/infrastructure/database/schema';
 import { eq } from 'drizzle-orm';
@@ -17,9 +18,16 @@ export const getPermissionsForUserFromDB = async (userId: number) => {
 		await db
 			.select({ name: permissionTable.name })
 			.from(permissionTable)
-			.innerJoin(userRoleTable, eq(userRoleTable.roleId, permissionTable.id))
+			.innerJoin(
+				rolePermissionTable,
+				eq(rolePermissionTable.permissionId, permissionTable.id)
+			)
+			.innerJoin(
+				userRoleTable,
+				eq(userRoleTable.roleId, rolePermissionTable.roleId)
+			)
 			.where(eq(userRoleTable.userId, userId))
-	).map((p) => p.name);
+	).map((permission) => permission.name);
 };
 
 export const getAllUsersWithPermissions = async () => {

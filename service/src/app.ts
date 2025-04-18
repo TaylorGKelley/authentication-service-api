@@ -44,7 +44,6 @@ app.use(passport.initialize());
 
 app.use(logRequest);
 app.use(authenticateRequest);
-// app.use(authorizeRequest); // * move middleware to individual routes that are protected by it
 
 app.use('/api/v1', authRouter);
 app.use('/api/v1/auth/google', googleOAuthRouter);
