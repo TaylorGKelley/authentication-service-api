@@ -36,18 +36,71 @@ export const linkedServicesData: (typeof linkedServiceTable.$inferInsert)[] = [
 // * permissions and roles
 export const permissionsData: (typeof permissionTable.$inferInsert)[] = [
 	{
-		id: 0,
+		name: 'log:read:all',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'permission:read:all',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'permission:read',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
 		name: 'user:read',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 1,
-		name: 'admin:read:all',
+		name: 'permission:create',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 2,
-		name: 'admin:write:all',
+		name: 'permission:create',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'permission:update',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'permission:delete',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'role:read:all',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'role:read',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'role:create',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'role:update',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'role:delete',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'role:user:add',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'role:user:remove',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'role:permission:add',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		name: 'role:permission:remove',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 ];
