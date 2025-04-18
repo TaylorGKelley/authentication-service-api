@@ -116,7 +116,6 @@ export const rolesData: (typeof roleTable.$inferInsert)[] = [
 // * linking tables
 export const userRolesData: (typeof userRoleTable.$inferInsert)[] = [
 	{
-		id: 0,
 		userId: usersData[0].id!,
 		roleId: rolesData[0].id!,
 	},
@@ -125,18 +124,71 @@ export const userRolesData: (typeof userRoleTable.$inferInsert)[] = [
 export const rolePermissionsData: (typeof rolePermissionTable.$inferInsert)[] =
 	[
 		{
-			id: 0,
 			permissionId: permissionsData[0].id!,
 			roleId: rolesData[0].id!,
 		},
 		{
-			id: 1,
 			permissionId: permissionsData[1].id!,
 			roleId: rolesData[0].id!,
 		},
 		{
-			id: 3,
 			permissionId: permissionsData[2].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[3].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[4].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[5].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[6].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[7].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[8].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[9].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[10].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[11].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[12].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[13].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[14].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[15].id!,
+			roleId: rolesData[0].id!,
+		},
+		{
+			permissionId: permissionsData[16].id!,
 			roleId: rolesData[0].id!,
 		},
 	];
