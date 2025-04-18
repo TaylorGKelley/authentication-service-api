@@ -1,25 +1,120 @@
 import { RequestHandler } from 'express';
+import { AppError } from '@/domain/entities/AppError';
+import getAllPermissionsUseCase from '@/app/useCases/permissions/getAllPermissions';
+import getPermissionUseCase from '@/app/useCases/permissions/getPermission';
+import createPermissionUseCase from '@/app/useCases/permissions/createPermission';
+import importPermissionsUseCase from '@/app/useCases/permissions/importPermissions';
+import updatePermissionUseCase from '@/app/useCases/permissions/updatePermission';
+import deletePermissionUseCase from '@/app/useCases/permissions/deletePermission';
+import Permission from '@/domain/types/authorization/Permission';
 
-export const getAllPermissions: RequestHandler = (req, res, next) => {};
+export const getAllPermissions: RequestHandler = async (req, res, next) => {
+  try {
+    const permissions = await getAllPermissionsUseCase();
 
-export const getPermission: RequestHandler<{ permissionId: number }> = (
+    res.status(200).json({
+      permissions,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPermission: RequestHandler<{ permissionId: number }> = async (
   req,
   res,
   next
-) => {};
+) => {
+  const { permissionId } = req.params;
 
-export const createPermission: RequestHandler = (req, res, next) => {};
+  try {
+    const permission = await getPermissionUseCase(permissionId);
 
-export const importPermissions: RequestHandler = (req, res, next) => {};
+    res.status(200).json({
+      permission,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
-export const updatePermission: RequestHandler<{ permissionId: number }> = (
-  req,
-  res,
-  next
-) => {};
+export const createPermission: RequestHandler<
+  any,
+  any,
+  Omit<Permission, 'id'>
+> = async (req, res, next) => {
+  const permission = req.body;
+  try {
+    const newPermission = await createPermissionUseCase(permission);
 
-export const deletePermission: RequestHandler<{ permissionId: number }> = (
-  req,
-  res,
-  next
-) => {};
+    if (!newPermission) {
+      throw new AppError('Permission already exist', 409);
+    }
+
+    res.status(200).json({
+      message: 'Permission Created',
+      permission: newPermission,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const importPermissions: RequestHandler<
+  any,
+  any,
+  Omit<Permission, 'id'>[]
+> = async (req, res, next) => {
+  const permissions = req.body;
+
+  try {
+    const newPermissions = await importPermissionsUseCase(permissions);
+
+    res.status(200).json({
+      permissions: newPermissions,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updatePermission: RequestHandler<
+  {
+    permissionId: number;
+  },
+  any,
+  Partial<Permission>
+> = async (req, res, next) => {
+  const { permissionId } = req.params;
+  const permission = req.body;
+
+  try {
+    const updatedPermission = await updatePermissionUseCase(
+      permissionId,
+      permission
+    );
+
+    res.status(200).json({
+      message: 'Permission Updated',
+      permission: updatedPermission,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deletePermission: RequestHandler<{
+  permissionId: number;
+}> = async (req, res, next) => {
+  const { permissionId } = req.params;
+
+  try {
+    await deletePermissionUseCase(permissionId);
+
+    res.status(200).json({
+      message: 'Permission deleted',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
