@@ -3,7 +3,9 @@ import { User } from '@/domain/entities/User';
 import { getPermissionsForUser as getPermissionsForUserUseCase } from '@/app/useCases/permissionSync';
 import { AppError } from '@/domain/entities/AppError';
 
-const authorize: (allowedPermissions: string[]) => RequestHandler =
+const authorize: (
+	allowedPermissions: string[]
+) => RequestHandler<any, any, any, any> =
 	(allowedPermissions) => async (req, res, next) => {
 		try {
 			if (!req.user) {
