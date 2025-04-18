@@ -11,7 +11,7 @@ import {
 const permissionRouter = Router();
 
 permissionRouter.get('/', getAllPermissions);
-permissionRouter.get('/:id', getPermission);
+permissionRouter.get('/:permissionId', getPermission);
 permissionRouter.post('/', createPermission);
 permissionRouter.post('/import', importPermissions);
 permissionRouter.put('/:permissionId', updatePermission);
