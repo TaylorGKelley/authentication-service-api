@@ -1,3 +1,4 @@
+import { permissionSyncWorker } from '@/app/workers/PermissionSyncWorker';
 import { db } from '@/infrastructure/database';
 import { rolePermissionTable } from '@/infrastructure/database/schema';
 import { and, eq } from 'drizzle-orm';
@@ -14,6 +15,10 @@ const removePermissionFromRole = async (
 				eq(rolePermissionTable.roleId, roleId)
 			)
 		);
+
+	if (result.rowCount != null && result.rowCount > 0) {
+		permissionSyncWorker.emit('role-permission-updated', roleId);
+	}
 
 	return result.rowCount != null && result.rowCount > 0;
 };

@@ -2,6 +2,7 @@ import { RequestHandler } from 'express';
 import { AppError } from '@/domain/entities/AppError';
 import getAllPermissionsUseCase from '@/app/useCases/permissions/getAllPermissions';
 import getPermissionUseCase from '@/app/useCases/permissions/getPermission';
+import { getPermissionsForUser as getPermissionsForUserUseCase } from '@/app/useCases/permissionSync';
 import createPermissionUseCase from '@/app/useCases/permissions/createPermission';
 import importPermissionsUseCase from '@/app/useCases/permissions/importPermissions';
 import updatePermissionUseCase from '@/app/useCases/permissions/updatePermission';
@@ -32,6 +33,24 @@ export const getPermission: RequestHandler<{ permissionId: number }> = async (
 
 		res.status(200).json({
 			permission,
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const getPermissionsForUser: RequestHandler<{ userId: number }> = async (
+	req,
+	res,
+	next
+) => {
+	const { userId } = req.params;
+
+	try {
+		const permissions = await getPermissionsForUserUseCase(userId);
+
+		res.status(200).json({
+			permissions,
 		});
 	} catch (error) {
 		next(error);
