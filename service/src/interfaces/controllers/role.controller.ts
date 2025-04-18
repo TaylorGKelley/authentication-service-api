@@ -106,46 +106,6 @@ export const deleteRole: RequestHandler<{
 	}
 };
 
-export const addUserToRole: RequestHandler<
-	any,
-	any,
-	{ userId: number; roleId: number }
-> = async (req, res, next) => {
-	const { userId, roleId } = req.body;
-
-	try {
-		const result = await addUserToRoleUseCase(userId, roleId);
-
-		if (!result) {
-			throw new AppError('User already belongs to that role', 409);
-		}
-
-		res.status(200).json({
-			message: 'User added to role',
-		});
-	} catch (error) {
-		next(error);
-	}
-};
-
-export const removeUserFromRole: RequestHandler<
-	any,
-	any,
-	{ userId: number; roleId: number }
-> = async (req, res, next) => {
-	const { userId, roleId } = req.body;
-
-	try {
-		await removeUserFromRoleUseCase(userId, roleId);
-
-		res.status(200).json({
-			message: 'User removed from role',
-		});
-	} catch (error) {
-		next(error);
-	}
-};
-
 export const addPermissionToRole: RequestHandler<
 	any,
 	any,
@@ -177,6 +137,46 @@ export const removePermissionFromRole: RequestHandler<
 
 	try {
 		await removePermissionFromRoleUseCase(userId, roleId);
+
+		res.status(200).json({
+			message: 'Permission removed from role',
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const addUserToRole: RequestHandler<
+	any,
+	any,
+	{ userId: number; roleId: number }
+> = async (req, res, next) => {
+	const { userId, roleId } = req.body;
+
+	try {
+		const result = await addUserToRoleUseCase(userId, roleId);
+
+		if (!result) {
+			throw new AppError('User already belongs to that role', 409);
+		}
+
+		res.status(200).json({
+			message: 'User added to role',
+		});
+	} catch (error) {
+		next(error);
+	}
+};
+
+export const removeUserFromRole: RequestHandler<
+	any,
+	any,
+	{ userId: number; roleId: number }
+> = async (req, res, next) => {
+	const { userId, roleId } = req.body;
+
+	try {
+		await removeUserFromRoleUseCase(userId, roleId);
 
 		res.status(200).json({
 			message: 'User removed from role',
