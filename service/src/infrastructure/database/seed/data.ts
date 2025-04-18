@@ -19,7 +19,7 @@ export const usersData: (typeof userTable.$inferInsert)[] = [
 
 export const profileInfoData: (typeof profileInfoTable.$inferInsert)[] = [
 	{
-		userId: 1,
+		userId: 0,
 		firstName: 'John',
 		lastName: 'Doe',
 	},
@@ -36,70 +36,87 @@ export const linkedServicesData: (typeof linkedServiceTable.$inferInsert)[] = [
 // * permissions and roles
 export const permissionsData: (typeof permissionTable.$inferInsert)[] = [
 	{
+		id: 0,
 		name: 'log:read:all',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		name: 'permission:read:all',
-		linkedServiceId: linkedServicesData[0].id!,
-	},
-	{
-		name: 'permission:read',
-		linkedServiceId: linkedServicesData[0].id!,
-	},
-	{
+		id: 1,
 		name: 'user:read',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 2,
+		name: 'permission:read:all',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		id: 3,
+		name: 'permission:read',
+		linkedServiceId: linkedServicesData[0].id!,
+	},
+	{
+		id: 4,
 		name: 'permission:create',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 5,
 		name: 'permission:create',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 6,
 		name: 'permission:update',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 7,
 		name: 'permission:delete',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 8,
 		name: 'role:read:all',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 9,
 		name: 'role:read',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 10,
 		name: 'role:create',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 11,
 		name: 'role:update',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 12,
 		name: 'role:delete',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 13,
 		name: 'role:user:add',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 14,
 		name: 'role:user:remove',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 15,
 		name: 'role:permission:add',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
+		id: 16,
 		name: 'role:permission:remove',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
