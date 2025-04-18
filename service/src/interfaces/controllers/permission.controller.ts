@@ -41,7 +41,7 @@ export const getPermission: RequestHandler<{ permissionId: number }> = async (
 export const createPermission: RequestHandler<
 	any,
 	any,
-	Omit<Permission, 'id'>
+	Omit<Permission, 'id'> & { addToNewRole?: boolean }
 > = async (req, res, next) => {
 	const permission = req.body;
 	try {
@@ -63,7 +63,7 @@ export const createPermission: RequestHandler<
 export const importPermissions: RequestHandler<
 	any,
 	any,
-	Omit<Permission, 'id'>[]
+	(Omit<Permission, 'id'> & { addToNewRole?: boolean })[]
 > = async (req, res, next) => {
 	const permissions = req.body;
 
