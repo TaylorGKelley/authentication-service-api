@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
 import { AppError } from '@/domain/entities/AppError';
+import Role from '@/domain/types/authorization/Role';
 import getAllRolesUseCase from '@/app/useCases/roles/getAllRoles';
 import getRoleUseCase from '@/app/useCases/roles/getRole';
 import createRoleUseCase from '@/app/useCases/roles/createRole';
@@ -9,7 +10,6 @@ import addUserToRoleUseCase from '@/app/useCases/roles/addUserToRole';
 import removeUserFromRoleUseCase from '@/app/useCases/roles/removeUserFromRole';
 import addPermissionToRoleUseCase from '@/app/useCases/roles/addPermissionToRole';
 import removePermissionFromRoleUseCase from '@/app/useCases/roles/removePermissionFromRole';
-import Role from '@/domain/types/authorization/Role';
 
 export const getAllRoles: RequestHandler = async (req, res, next) => {
 	try {
@@ -114,7 +114,7 @@ export const addPermissionToRole: RequestHandler<
 	const { roleId, permissionId } = req.body;
 	try {
 		const result = await addPermissionToRoleUseCase(roleId, permissionId);
-
+		console.log(result);
 		if (!result) {
 			throw new AppError('Role already has that permission', 409);
 		}
@@ -135,7 +135,11 @@ export const removePermissionFromRole: RequestHandler<
 	const { roleId, permissionId } = req.body;
 
 	try {
-		await removePermissionFromRoleUseCase(roleId, permissionId);
+		const result = await removePermissionFromRoleUseCase(roleId, permissionId);
+
+		if (!result) {
+			throw new AppError('Role does not have that permission', 409);
+		}
 
 		res.status(200).json({
 			message: 'Permission removed from role',
@@ -148,12 +152,12 @@ export const removePermissionFromRole: RequestHandler<
 export const addUserToRole: RequestHandler<
 	any,
 	any,
-	{ userId: number; roleId: number }
+	{ roleId: number; userId: number }
 > = async (req, res, next) => {
-	const { userId, roleId } = req.body;
+	const { roleId, userId } = req.body;
 
 	try {
-		const result = await addUserToRoleUseCase(userId, roleId);
+		const result = await addUserToRoleUseCase(roleId, userId);
 
 		if (!result) {
 			throw new AppError('User already belongs to that role', 409);
@@ -175,7 +179,11 @@ export const removeUserFromRole: RequestHandler<
 	const { userId, roleId } = req.body;
 
 	try {
-		await removeUserFromRoleUseCase(userId, roleId);
+		const result = await removeUserFromRoleUseCase(roleId, userId);
+
+		if (!result) {
+			throw new AppError('User does not belong to that role', 409);
+		}
 
 		res.status(200).json({
 			message: 'User removed from role',

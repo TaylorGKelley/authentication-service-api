@@ -2,7 +2,7 @@ import { db } from '@/infrastructure/database';
 import { userRoleTable } from '@/infrastructure/database/schema';
 import { and, eq } from 'drizzle-orm';
 
-const removeUserFromRole = async (userId: number, roleId: number) => {
+const removeUserFromRole = async (roleId: number, userId: number) => {
 	const result = await db
 		.delete(userRoleTable)
 		.where(
