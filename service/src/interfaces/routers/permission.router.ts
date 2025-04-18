@@ -8,15 +8,40 @@ import {
 	importPermissions,
 	updatePermission,
 } from '../controllers/permission.controller';
+import authorize from '../middleware/authorize';
 
 const permissionRouter = Router();
 
-permissionRouter.get('/', getAllPermissions);
-permissionRouter.get('/:permissionId', getPermission);
-permissionRouter.get('/user/:userId', getPermissionsForUser);
-permissionRouter.post('/', createPermission);
-permissionRouter.post('/import', importPermissions);
-permissionRouter.put('/:permissionId', updatePermission);
-permissionRouter.delete('/:permissionId', deletePermission);
+permissionRouter.get(
+	'/',
+	authorize(['permission:read:all']),
+	getAllPermissions
+);
+permissionRouter.get(
+	'/:permissionId',
+	authorize(['permission:read']),
+	getPermission
+);
+permissionRouter.get(
+	'/user/:userId',
+	authorize(['user:read']),
+	getPermissionsForUser
+);
+permissionRouter.post('/', authorize(['permission:create']), createPermission);
+permissionRouter.post(
+	'/import',
+	authorize(['permission:create']),
+	importPermissions
+);
+permissionRouter.put(
+	'/:permissionId',
+	authorize(['permission:update']),
+	updatePermission
+);
+permissionRouter.delete(
+	'/:permissionId',
+	authorize(['permission:delete']),
+	deletePermission
+);
 
 export default permissionRouter;

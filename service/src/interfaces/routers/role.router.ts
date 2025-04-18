@@ -10,17 +10,30 @@ import {
 	removeUserFromRole,
 	updateRole,
 } from '../controllers/role.controller';
+import authorize from '../middleware/authorize';
 
 const roleRouter = Router();
 
-roleRouter.get('/', getAllRoles);
-roleRouter.get('/:roleId', getRole);
-roleRouter.post('/', createRole);
-roleRouter.put('/:roleId', updateRole);
-roleRouter.delete('/:roleId', deleteRole);
-roleRouter.post('/add/user', addUserToRole);
-roleRouter.delete('/remove/user', removeUserFromRole);
-roleRouter.post('/add/permission', addPermissionToRole);
-roleRouter.delete('/remove/permission', removePermissionFromRole);
+roleRouter.get('/', authorize(['role:read:all']), getAllRoles);
+roleRouter.get('/:roleId', authorize(['role:read']), getRole);
+roleRouter.post('/', authorize(['role:create']), createRole);
+roleRouter.put('/:roleId', authorize(['role:update']), updateRole);
+roleRouter.delete('/:roleId', authorize(['role:delete']), deleteRole);
+roleRouter.post('/add/user', authorize(['role:user:add']), addUserToRole);
+roleRouter.delete(
+	'/remove/user',
+	authorize(['role:user:remove']),
+	removeUserFromRole
+);
+roleRouter.post(
+	'/add/permission',
+	authorize(['role:permission:add']),
+	addPermissionToRole
+);
+roleRouter.delete(
+	'/remove/permission',
+	authorize(['role:permission:remove']),
+	removePermissionFromRole
+);
 
 export default roleRouter;
