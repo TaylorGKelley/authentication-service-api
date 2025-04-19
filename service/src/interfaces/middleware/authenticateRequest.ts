@@ -11,7 +11,7 @@ const authenticateRequest: RequestHandler = async (req, _res, next) => {
 		}
 
 		const verifiedToken = await verifyAccessToken(accessToken);
-		if (!verifiedToken?.id) {
+		if (verifiedToken?.id === undefined) {
 			req.user = undefined;
 			return next();
 		}
