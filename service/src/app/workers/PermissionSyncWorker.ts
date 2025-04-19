@@ -13,7 +13,7 @@ class PermissionSyncWorker extends EventEmitter {
 		super();
 		this.fullSync(); // initial sync
 		this.setupListeners();
-		this.startIntervalSync(); // start the sync interval (15 minutes)
+		this.startIntervalSync(); // start the sync interval (10 minutes)
 	}
 
 	private setupListeners() {
@@ -55,7 +55,7 @@ class PermissionSyncWorker extends EventEmitter {
 	private startIntervalSync() {
 		setInterval(() => {
 			this.fullSync();
-		}, 15 * 60 * 1000); // every 15 minutes
+		}, 10 * 60 * 1000); // every 10 minutes
 	}
 }
 

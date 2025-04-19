@@ -37,7 +37,14 @@ export const getAllUsersWithPermissions = async () => {
 			permissionName: permissionTable.name,
 		})
 		.from(userRoleTable)
-		.innerJoin(permissionTable, eq(permissionTable.id, userRoleTable.roleId));
+		.innerJoin(
+			rolePermissionTable,
+			eq(userRoleTable.roleId, rolePermissionTable.roleId)
+		)
+		.innerJoin(
+			permissionTable,
+			eq(permissionTable.id, rolePermissionTable.permissionId)
+		);
 
 	const userPermissionsMap = new Map<number, string[]>();
 	userPermissions.forEach(({ userId, permissionName }) => {
