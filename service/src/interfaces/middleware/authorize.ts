@@ -20,7 +20,7 @@ const authorize: (
 				permissions.includes(allowedPermission)
 			);
 
-			if (!isAllowed || !allowedPermissions.includes('public')) {
+			if (!isAllowed && !allowedPermissions.includes('public')) {
 				throw new AppError('Forbidden', 403);
 			}
 
