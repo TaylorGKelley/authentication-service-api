@@ -62,61 +62,51 @@ export const permissionsData: (typeof permissionTable.$inferInsert)[] = [
 	},
 	{
 		id: 5,
-		name: 'permission:create',
-		linkedServiceId: linkedServicesData[0].id!,
-	},
-	{
-		id: 6,
-		name: 'permission:update',
-		linkedServiceId: linkedServicesData[0].id!,
-	},
-	{
-		id: 7,
 		name: 'permission:delete',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 8,
+		id: 6,
 		name: 'role:read:all',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 9,
+		id: 7,
 		name: 'role:read',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 10,
+		id: 8,
 		name: 'role:create',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 11,
+		id: 9,
 		name: 'role:update',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 12,
+		id: 10,
 		name: 'role:delete',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 13,
+		id: 11,
 		name: 'role:user:add',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 14,
+		id: 12,
 		name: 'role:user:remove',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 15,
+		id: 13,
 		name: 'role:permission:add',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
 	{
-		id: 16,
+		id: 14,
 		name: 'role:permission:remove',
 		linkedServiceId: linkedServicesData[0].id!,
 	},
@@ -198,14 +188,6 @@ export const rolePermissionsData: (typeof rolePermissionTable.$inferInsert)[] =
 		},
 		{
 			permissionId: permissionsData[14].id!,
-			roleId: rolesData[0].id!,
-		},
-		{
-			permissionId: permissionsData[15].id!,
-			roleId: rolesData[0].id!,
-		},
-		{
-			permissionId: permissionsData[16].id!,
 			roleId: rolesData[0].id!,
 		},
 	];
