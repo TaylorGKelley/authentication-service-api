@@ -1,8 +1,10 @@
+import { UUID } from 'node:crypto';
+
 type Role = {
 	id: number;
 	name: string;
 	assignToNewUser: boolean;
-	linkedServiceId: number;
+	linkedServiceId: UUID;
 };
 
 export default Role;

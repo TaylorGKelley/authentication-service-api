@@ -1,8 +1,10 @@
+import { UUID } from 'node:crypto';
+
 type Permission = {
 	id: number;
 	name: string;
 	assignToNewRole: boolean;
-	linkedServiceId: number;
+	linkedServiceId: UUID;
 };
 
 export default Permission;

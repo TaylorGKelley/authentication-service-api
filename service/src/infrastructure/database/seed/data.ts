@@ -28,7 +28,7 @@ export const profileInfoData: (typeof profileInfoTable.$inferInsert)[] = [
 // * serivces
 export const linkedServicesData: (typeof linkedServiceTable.$inferInsert)[] = [
 	{
-		id: 0,
+		id: '8d46d402-37e4-4b9c-82ef-ccf44acbb43f', // Same UUID as is in the .env file
 		name: 'internal',
 	},
 ];

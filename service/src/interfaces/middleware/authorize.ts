@@ -1,7 +1,10 @@
-import { RequestHandler } from 'express';
-import { User } from '@/domain/entities/User';
+import { type RequestHandler } from 'express';
+import { type User } from '@/domain/entities/User';
+import { type UUID } from 'node:crypto';
 import { getPermissionsForUser as getPermissionsForUserUseCase } from '@/app/useCases/permissionSync';
 import { AppError } from '@/domain/entities/AppError';
+
+const clientId = process.env.CLIENT_ID! as UUID;
 
 const authorize: (
 	allowedPermissions: string[]
@@ -17,7 +20,7 @@ const authorize: (
 			);
 
 			const isAllowed = allowedPermissions.some((allowedPermission) =>
-				permissions.includes(allowedPermission)
+				permissions[clientId].includes(allowedPermission)
 			);
 
 			if (!isAllowed && !allowedPermissions.includes('public')) {

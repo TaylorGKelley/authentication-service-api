@@ -1,6 +1,6 @@
 // workers/PermissionSyncWorker.ts
 
-import EventEmitter from 'events';
+import EventEmitter from 'node:events';
 import redisClient from '@/infrastructure/configurations/redis/client';
 import {
 	getPermissionsForUserFromDB,
@@ -33,7 +33,10 @@ class PermissionSyncWorker extends EventEmitter {
 		});
 	}
 
-	public async syncUser(userId: number, permissions: string[]) {
+	public async syncUser(
+		userId: number,
+		permissions: { [linkedServiceId: string]: string[] }
+	) {
 		await redisClient.set(
 			`user-permissions:${userId}`,
 			JSON.stringify(permissions),
@@ -46,8 +49,8 @@ class PermissionSyncWorker extends EventEmitter {
 	public async fullSync() {
 		console.log('[Sync] Performing full permission sync...');
 		const users = await getAllUsersWithPermissions();
-		for (const user of users) {
-			await this.syncUser(user.id, user.permissions);
+		for (const [userId, servicePermissions] of Object.entries(users)) {
+			await this.syncUser(parseInt(userId), servicePermissions);
 		}
 		console.log('[Sync] Full permission sync complete.');
 	}

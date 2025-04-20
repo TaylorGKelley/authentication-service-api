@@ -9,7 +9,7 @@
 		"db:seed": "ts-node -r tsconfig-paths/register src/infrastructure/database/seed/main.ts"
 	},
 	"keywords": [],
-	"author": "StenoCraft",
+	"author": "Taylor Kelley",
 	"license": "ISC",
 	"description": "",
 	"devDependencies": {
