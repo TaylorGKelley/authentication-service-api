@@ -5,7 +5,7 @@ import {
 	getAllLinkedServices,
 	getLinkedService,
 	updateLinkedService,
-} from '../controllers/linkedService.controller';
+} from '../controllers/linkedServices.controller';
 import authorize from '../middleware/authorize';
 
 const linkedServiceRouter = Router();
