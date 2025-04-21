@@ -103,7 +103,7 @@ export const register: RequestHandler<
 
 		const user = await findUser({ email });
 
-		if (user?.id) {
+		if (user.id === undefined) {
 			throw new AppError('User already exists', 403);
 		}
 
@@ -144,6 +144,7 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
 		if (!refreshToken) throw new AppError('Refresh token not found', 401);
 
 		const verifiedRefreshToken = await verifyRefreshToken(refreshToken);
+
 		const user = await findUser({ id: verifiedRefreshToken.id });
 
 		// delete the current tokens
@@ -245,6 +246,7 @@ export const resetPasswordSender: RequestHandler<
 		req.user = user;
 		const resetToken = await createPasswordResetToken(user);
 
+
 		const message = {
 			to: email,
 			subject: 'Password Reset',
@@ -285,6 +287,7 @@ export const resetPassword: RequestHandler<
 		}
 
 		await updatePassword(token.userId!, newPassword);
+
 		req.user = { id: token.userId! } as User;
 
 		res.status(200).json({

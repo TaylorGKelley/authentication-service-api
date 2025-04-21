@@ -4,8 +4,9 @@ import { db } from '@/infrastructure/database';
 import { AppError } from '@/domain/entities/AppError';
 import { User } from '@/domain/entities/User';
 
+
 export const createPasswordResetToken = async (user: User) => {
-	if (!user.id) {
+	if (user?.id === undefined) {
 		throw new AppError('A user with that email was not found');
 	} else if (user.googleId || user.githubId) {
 		throw new AppError(

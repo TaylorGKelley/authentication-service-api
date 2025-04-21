@@ -1,4 +1,6 @@
 import 'dotenv/config';
+import './app/useCases/permissionSync';
+
 import app from './app';
 import { AppError } from './domain/entities/AppError';
 
