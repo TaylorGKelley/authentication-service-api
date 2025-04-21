@@ -45,11 +45,11 @@ export const createLinkedService: RequestHandler<
 		const newLinkedService = await createLinkedServiceUseCase(linkedService);
 
 		if (!newLinkedService) {
-			throw new AppError('LinkedService already exist', 409);
+			throw new AppError('Linked Service already exist', 409);
 		}
 
 		res.status(200).json({
-			message: 'LinkedService Created',
+			message: 'Linked Service Created',
 			linkedService: newLinkedService,
 		});
 	} catch (error) {
@@ -74,7 +74,7 @@ export const updateLinkedService: RequestHandler<
 		);
 
 		res.status(200).json({
-			message: 'LinkedService Updated',
+			message: 'Linked Service Updated',
 			linkedService: updatedLinkedService,
 		});
 	} catch (error) {
@@ -91,11 +91,11 @@ export const deleteLinkedService: RequestHandler<{
 		const isSuccess = await deleteLinkedServiceUseCase(linkedServiceId);
 
 		if (!isSuccess) {
-			throw new AppError('LinkedService with that id does not exist', 404);
+			throw new AppError('Linked Service with that id does not exist', 404);
 		}
 
 		res.status(200).json({
-			message: 'LinkedService deleted',
+			message: 'Linked Service deleted',
 		});
 	} catch (error) {
 		next(error);
