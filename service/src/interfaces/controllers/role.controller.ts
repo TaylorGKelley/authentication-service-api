@@ -37,6 +37,10 @@ export const getRole: RequestHandler<{
 	try {
 		const role = await getRoleUseCase(linkedServiceId, roleId);
 
+		if (!role) {
+			throw new AppError('Role not found', 404);
+		}
+
 		res.status(200).json({
 			role,
 		});

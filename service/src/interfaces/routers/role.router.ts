@@ -12,7 +12,7 @@ import {
 } from '../controllers/role.controller';
 import authorize from '../middleware/authorize';
 
-const roleRouter = Router();
+const roleRouter = Router({ mergeParams: true });
 
 roleRouter.get('/', authorize(['role:read:all']), getAllRoles);
 roleRouter.get('/:roleId', authorize(['role:read']), getRole);

@@ -4,13 +4,12 @@ import {
 	deletePermission,
 	getAllPermissions,
 	getPermission,
-	getPermissionsForUser,
 	importPermissions,
 	updatePermission,
 } from '../controllers/permission.controller';
 import authorize from '../middleware/authorize';
 
-const permissionRouter = Router();
+const permissionRouter = Router({ mergeParams: true });
 
 permissionRouter.get(
 	'/',
@@ -21,11 +20,6 @@ permissionRouter.get(
 	'/:permissionId',
 	authorize(['permission:read']),
 	getPermission
-);
-permissionRouter.get(
-	'/user/:userId',
-	authorize(['user:read']),
-	getPermissionsForUser
 );
 permissionRouter.post('/', authorize(['permission:create']), createPermission);
 permissionRouter.post(

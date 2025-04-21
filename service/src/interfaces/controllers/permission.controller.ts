@@ -39,26 +39,12 @@ export const getPermission: RequestHandler<{
 			permissionId
 		);
 
+		if (!permission) {
+			throw new AppError('Permission not found', 404);
+		}
+
 		res.status(200).json({
 			permission,
-		});
-	} catch (error) {
-		next(error);
-	}
-};
-
-export const getPermissionsForUser: RequestHandler<{ userId: number }> = async (
-	req,
-	res,
-	next
-) => {
-	const { userId } = req.params;
-
-	try {
-		const permissions = await getPermissionsForUserUseCase(userId);
-
-		res.status(200).json({
-			permissions,
 		});
 	} catch (error) {
 		next(error);
