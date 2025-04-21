@@ -1,8 +1,10 @@
+import LinkedService from '@/domain/types/authorization/LinkedService';
 import { db } from '@/infrastructure/database';
 import { roleTable } from '@/infrastructure/database/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 const updateRole = async (
+	linkedServiceId: LinkedService['id'],
 	roleId: number,
 	role: Partial<typeof roleTable.$inferInsert>
 ) => {
@@ -10,7 +12,12 @@ const updateRole = async (
 		await db
 			.update(roleTable)
 			.set(role)
-			.where(eq(roleTable.id, roleId))
+			.where(
+				and(
+					eq(roleTable.linkedServiceId, linkedServiceId),
+					eq(roleTable.id, roleId)
+				)
+			)
 			.returning()
 	).at(0);
 };

@@ -10,10 +10,15 @@ import addUserToRoleUseCase from '@/app/useCases/roles/addUserToRole';
 import removeUserFromRoleUseCase from '@/app/useCases/roles/removeUserFromRole';
 import addPermissionToRoleUseCase from '@/app/useCases/roles/addPermissionToRole';
 import removePermissionFromRoleUseCase from '@/app/useCases/roles/removePermissionFromRole';
+import LinkedService from '@/domain/types/authorization/LinkedService';
 
-export const getAllRoles: RequestHandler = async (req, res, next) => {
+export const getAllRoles: RequestHandler<{
+	linkedServiceId: LinkedService['id'];
+}> = async (req, res, next) => {
+	const { linkedServiceId } = req.params;
+
 	try {
-		const roles = await getAllRolesUseCase();
+		const roles = await getAllRolesUseCase(linkedServiceId);
 
 		res.status(200).json({
 			roles,
@@ -23,15 +28,14 @@ export const getAllRoles: RequestHandler = async (req, res, next) => {
 	}
 };
 
-export const getRole: RequestHandler<{ roleId: number }> = async (
-	req,
-	res,
-	next
-) => {
-	const { roleId } = req.params;
+export const getRole: RequestHandler<{
+	linkedServiceId: LinkedService['id'];
+	roleId: number;
+}> = async (req, res, next) => {
+	const { linkedServiceId, roleId } = req.params;
 
 	try {
-		const role = await getRoleUseCase(roleId);
+		const role = await getRoleUseCase(linkedServiceId, roleId);
 
 		res.status(200).json({
 			role,
@@ -42,14 +46,15 @@ export const getRole: RequestHandler<{ roleId: number }> = async (
 };
 
 export const createRole: RequestHandler<
+	{ linkedServiceId: LinkedService['id'] },
 	any,
-	any,
-	Omit<Role, 'id'> & { addToNewUser?: boolean }
+	Omit<Role, 'id' | 'linkedServiceId'> & { addToNewUser?: boolean }
 > = async (req, res, next) => {
+	const { linkedServiceId } = req.params;
 	const role = req.body;
 
 	try {
-		const newRole = await createRoleUseCase(role);
+		const newRole = await createRoleUseCase(linkedServiceId, role);
 
 		if (!newRole) {
 			throw new AppError('Role already exist', 409);
@@ -66,16 +71,17 @@ export const createRole: RequestHandler<
 
 export const updateRole: RequestHandler<
 	{
+		linkedServiceId: LinkedService['id'];
 		roleId: number;
 	},
 	any,
-	Partial<Role>
+	Omit<Partial<Role>, 'linkedServiceId'>
 > = async (req, res, next) => {
-	const { roleId } = req.params;
+	const { linkedServiceId, roleId } = req.params;
 	const role = req.body;
 
 	try {
-		const updatedRole = await updateRoleUseCase(roleId, role);
+		const updatedRole = await updateRoleUseCase(linkedServiceId, roleId, role);
 
 		res.status(200).json({
 			message: 'Role Updated',
@@ -87,12 +93,13 @@ export const updateRole: RequestHandler<
 };
 
 export const deleteRole: RequestHandler<{
+	linkedServiceId: LinkedService['id'];
 	roleId: number;
 }> = async (req, res, next) => {
-	const { roleId } = req.params;
+	const { linkedServiceId, roleId } = req.params;
 
 	try {
-		const isSuccess = await deleteRoleUseCase(roleId);
+		const isSuccess = await deleteRoleUseCase(linkedServiceId, roleId);
 
 		if (!isSuccess) {
 			throw new AppError('Role with that id does not exist', 404);
@@ -107,14 +114,19 @@ export const deleteRole: RequestHandler<{
 };
 
 export const addPermissionToRole: RequestHandler<
-	any,
+	{ linkedServiceId: LinkedService['id'] },
 	any,
 	{ roleId: number; permissionId: number }
 > = async (req, res, next) => {
+	const { linkedServiceId } = req.params;
 	const { roleId, permissionId } = req.body;
 
 	try {
-		const result = await addPermissionToRoleUseCase(roleId, permissionId);
+		const result = await addPermissionToRoleUseCase(
+			linkedServiceId,
+			roleId,
+			permissionId
+		);
 
 		if (!result) {
 			throw new AppError('Role already has that permission', 409);
@@ -129,14 +141,19 @@ export const addPermissionToRole: RequestHandler<
 };
 
 export const removePermissionFromRole: RequestHandler<
-	any,
+	{ linkedServiceId: LinkedService['id'] },
 	any,
 	{ permissionId: number; roleId: number }
 > = async (req, res, next) => {
+	const { linkedServiceId } = req.params;
 	const { roleId, permissionId } = req.body;
 
 	try {
-		const result = await removePermissionFromRoleUseCase(roleId, permissionId);
+		const result = await removePermissionFromRoleUseCase(
+			linkedServiceId,
+			roleId,
+			permissionId
+		);
 
 		if (!result) {
 			throw new AppError('Role does not have that permission', 409);
@@ -151,14 +168,15 @@ export const removePermissionFromRole: RequestHandler<
 };
 
 export const addUserToRole: RequestHandler<
-	any,
+	{ linkedServiceId: LinkedService['id'] },
 	any,
 	{ roleId: number; userId: number }
 > = async (req, res, next) => {
+	const { linkedServiceId } = req.params;
 	const { roleId, userId } = req.body;
 
 	try {
-		const result = await addUserToRoleUseCase(roleId, userId);
+		const result = await addUserToRoleUseCase(linkedServiceId, roleId, userId);
 
 		if (!result) {
 			throw new AppError('User already belongs to that role', 409);
@@ -173,14 +191,19 @@ export const addUserToRole: RequestHandler<
 };
 
 export const removeUserFromRole: RequestHandler<
-	any,
+	{ linkedServiceId: LinkedService['id'] },
 	any,
 	{ userId: number; roleId: number }
 > = async (req, res, next) => {
+	const { linkedServiceId } = req.params;
 	const { userId, roleId } = req.body;
 
 	try {
-		const result = await removeUserFromRoleUseCase(roleId, userId);
+		const result = await removeUserFromRoleUseCase(
+			linkedServiceId,
+			roleId,
+			userId
+		);
 
 		if (!result) {
 			throw new AppError('User does not belong to that role', 409);

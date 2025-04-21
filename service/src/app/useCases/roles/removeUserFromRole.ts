@@ -1,9 +1,16 @@
 import { permissionSyncWorker } from '@/app/workers/PermissionSyncWorker';
+import LinkedService from '@/domain/types/authorization/LinkedService';
 import { db } from '@/infrastructure/database';
 import { userRoleTable } from '@/infrastructure/database/schema';
 import { and, eq } from 'drizzle-orm';
 
-const removeUserFromRole = async (roleId: number, userId: number) => {
+const removeUserFromRole = async (
+	linkedServiceId: LinkedService['id'],
+	roleId: number,
+	userId: number
+) => {
+	// ! Check if linked service id is valid
+
 	const result = await db
 		.delete(userRoleTable)
 		.where(

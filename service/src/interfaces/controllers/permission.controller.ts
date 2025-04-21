@@ -1,4 +1,7 @@
-import { RequestHandler } from 'express';
+import { type UUID } from 'node:crypto';
+import { type RequestHandler } from 'express';
+import type Permission from '@/domain/types/authorization/Permission';
+import type LinkedService from '@/domain/types/authorization/LinkedService';
 import { AppError } from '@/domain/entities/AppError';
 import getAllPermissionsUseCase from '@/app/useCases/permissions/getAllPermissions';
 import getPermissionUseCase from '@/app/useCases/permissions/getPermission';
@@ -7,11 +10,14 @@ import createPermissionUseCase from '@/app/useCases/permissions/createPermission
 import importPermissionsUseCase from '@/app/useCases/permissions/importPermissions';
 import updatePermissionUseCase from '@/app/useCases/permissions/updatePermission';
 import deletePermissionUseCase from '@/app/useCases/permissions/deletePermission';
-import Permission from '@/domain/types/authorization/Permission';
 
-export const getAllPermissions: RequestHandler = async (req, res, next) => {
+export const getAllPermissions: RequestHandler<{
+	linkedServiceId: LinkedService['id'];
+}> = async (req, res, next) => {
+	const { linkedServiceId } = req.params;
+
 	try {
-		const permissions = await getAllPermissionsUseCase();
+		const permissions = await getAllPermissionsUseCase(linkedServiceId);
 
 		res.status(200).json({
 			permissions,
@@ -21,15 +27,17 @@ export const getAllPermissions: RequestHandler = async (req, res, next) => {
 	}
 };
 
-export const getPermission: RequestHandler<{ permissionId: number }> = async (
-	req,
-	res,
-	next
-) => {
-	const { permissionId } = req.params;
+export const getPermission: RequestHandler<{
+	linkedServiceId: LinkedService['id'];
+	permissionId: number;
+}> = async (req, res, next) => {
+	const { linkedServiceId, permissionId } = req.params;
 
 	try {
-		const permission = await getPermissionUseCase(permissionId);
+		const permission = await getPermissionUseCase(
+			linkedServiceId,
+			permissionId
+		);
 
 		res.status(200).json({
 			permission,
@@ -58,13 +66,18 @@ export const getPermissionsForUser: RequestHandler<{ userId: number }> = async (
 };
 
 export const createPermission: RequestHandler<
+	{ linkedServiceId: UUID },
 	any,
-	any,
-	Omit<Permission, 'id'> & { addToNewRole?: boolean }
+	Omit<Permission, 'id' | 'linkedServiceId'> & { addToNewRole?: boolean }
 > = async (req, res, next) => {
+	const { linkedServiceId } = req.params;
 	const permission = req.body;
+
 	try {
-		const newPermission = await createPermissionUseCase(permission);
+		const newPermission = await createPermissionUseCase(
+			linkedServiceId,
+			permission
+		);
 
 		if (!newPermission) {
 			throw new AppError('Permission already exist', 409);
@@ -80,14 +93,18 @@ export const createPermission: RequestHandler<
 };
 
 export const importPermissions: RequestHandler<
+	{ linkedServiceId: UUID },
 	any,
-	any,
-	(Omit<Permission, 'id'> & { addToNewRole?: boolean })[]
+	(Omit<Permission, 'id' | 'linkedServiceId'> & { addToNewRole?: boolean })[]
 > = async (req, res, next) => {
+	const { linkedServiceId } = req.params;
 	const permissions = req.body;
 
 	try {
-		const newPermissions = await importPermissionsUseCase(permissions);
+		const newPermissions = await importPermissionsUseCase(
+			linkedServiceId,
+			permissions
+		);
 
 		res.status(200).json({
 			permissions: newPermissions,
@@ -99,19 +116,25 @@ export const importPermissions: RequestHandler<
 
 export const updatePermission: RequestHandler<
 	{
+		linkedServiceId: LinkedService['id'];
 		permissionId: number;
 	},
 	any,
-	Partial<Permission>
+	Omit<Partial<Permission>, 'linkedServiceId'>
 > = async (req, res, next) => {
-	const { permissionId } = req.params;
+	const { linkedServiceId, permissionId } = req.params;
 	const permission = req.body;
 
 	try {
 		const updatedPermission = await updatePermissionUseCase(
+			linkedServiceId,
 			permissionId,
 			permission
 		);
+
+		if (!updatePermission) {
+			throw new AppError('Permission not found', 404);
+		}
 
 		res.status(200).json({
 			message: 'Permission Updated',
@@ -123,12 +146,16 @@ export const updatePermission: RequestHandler<
 };
 
 export const deletePermission: RequestHandler<{
+	linkedServiceId: LinkedService['id'];
 	permissionId: number;
 }> = async (req, res, next) => {
-	const { permissionId } = req.params;
+	const { linkedServiceId, permissionId } = req.params;
 
 	try {
-		const isSuccess = await deletePermissionUseCase(permissionId);
+		const isSuccess = await deletePermissionUseCase(
+			linkedServiceId,
+			permissionId
+		);
 
 		if (!isSuccess) {
 			throw new AppError('Permission with that id does not exist', 404);

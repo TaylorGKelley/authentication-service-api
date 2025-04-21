@@ -51,8 +51,11 @@ app.use('/api/v1/auth/google', googleOAuthRouter);
 app.use('/api/v1/users', myInfoRouter);
 app.use('/api/v1/logs', logViewRouter);
 app.use('/api/v1/linked-services', linkedServiceRouter);
-app.use('/api/v1/permissions', permissionRouter);
-app.use('/api/v1/roles', roleRouter);
+app.use(
+	'/api/v1/linked-services/:linkedServiceId/permissions',
+	permissionRouter
+);
+app.use('/api/v1/linked-services/:linkedServiceId/roles', roleRouter);
 
 app.use('*', (_req, res) => {
 	res.status(404).json({ message: 'Not found' });

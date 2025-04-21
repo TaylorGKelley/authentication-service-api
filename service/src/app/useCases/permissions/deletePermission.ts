@@ -1,11 +1,20 @@
+import LinkedService from '@/domain/types/authorization/LinkedService';
 import { db } from '@/infrastructure/database';
 import { permissionTable } from '@/infrastructure/database/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
-const deletePermission = async (permissionId: number) => {
+const deletePermission = async (
+	linkedServiceId: LinkedService['id'],
+	permissionId: number
+) => {
 	const result = await db
 		.delete(permissionTable)
-		.where(eq(permissionTable.id, permissionId));
+		.where(
+			and(
+				eq(permissionTable.linkedServiceId, linkedServiceId),
+				eq(permissionTable.id, permissionId)
+			)
+		);
 
 	return result.rowCount != null && result.rowCount > 0;
 };

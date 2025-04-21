@@ -1,14 +1,18 @@
+import LinkedService from '@/domain/types/authorization/LinkedService';
 import { db } from '@/infrastructure/database';
 import { permissionTable } from '@/infrastructure/database/schema';
 
 const importPermissions = async (
-  permissions: (typeof permissionTable.$inferInsert)[]
+	linkedServiceId: LinkedService['id'],
+	permissions: Omit<typeof permissionTable.$inferInsert, 'linkedServiceId'>[]
 ) => {
-  return await db
-    .insert(permissionTable)
-    .values(permissions)
-    .onConflictDoNothing()
-    .returning();
+	return await db
+		.insert(permissionTable)
+		.values(
+			permissions.map((permission) => ({ ...permission, linkedServiceId }))
+		)
+		.onConflictDoNothing()
+		.returning();
 };
 
 export default importPermissions;
