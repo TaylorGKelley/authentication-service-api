@@ -10,7 +10,7 @@ import AuthContext from '../contexts/AuthContext';
 import AuthContextType from '../types/AuthContextType';
 import api from '../lib/api';
 import useCSRFContext from '../hooks/useCSRFContext';
-import { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
 type AxiosRequestConfigWithRetry = AxiosRequestConfig & {
   _retry?: boolean;
@@ -97,7 +97,7 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
             accessToken === undefined)
         ) {
           try {
-            const response = await api.post<{ accessToken: string }>(
+            const response = await axios.post<{ accessToken: string }>(
               '/refresh-token',
               undefined,
               {
@@ -107,6 +107,9 @@ const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
                 withCredentials: true,
               },
             );
+
+            if (!response || response?.status !== 200)
+              throw new Error('Cannot refresh token. Please login');
 
             setAccessToken(response.data.accessToken);
 

@@ -54,6 +54,8 @@ export const login: RequestHandler<
 
 			const profile = await getUserProfileInfo(user.id!);
 
+			req.user = user as User;
+
 			res.cookie('refreshToken', newRefreshToken, {
 				httpOnly: true,
 				secure: process.env.NODE_ENV === 'production',
@@ -120,6 +122,8 @@ export const register: RequestHandler<
 
 		const profile = await getUserProfileInfo(newUser.id!);
 
+		req.user = newUser as User;
+
 		res.cookie('refreshToken', newRefreshToken, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
@@ -149,6 +153,8 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
 		const newAccessToken = await generateAccessToken(user);
 		const newRefreshToken = await generateRefreshToken(user);
 
+		req.user = user as User;
+
 		res.cookie('refreshToken', newRefreshToken, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === 'production',
@@ -157,7 +163,7 @@ export const refreshToken: RequestHandler = async (req, res, next) => {
 			maxAge: 7 * 24 * 60 * 60 * 1000,
 		});
 
-		res.status(201).json({
+		res.status(200).json({
 			accessToken: newAccessToken,
 		});
 	} catch (error) {
@@ -236,7 +242,10 @@ export const resetPasswordSender: RequestHandler<
 	try {
 		const { email } = req.query;
 
-		const resetToken = await createPasswordResetToken(email);
+		const user = await findUser({ email });
+		req.user = user;
+		const resetToken = await createPasswordResetToken(user);
+
 
 		const message = {
 			to: email,
@@ -278,6 +287,8 @@ export const resetPassword: RequestHandler<
 		}
 
 		await updatePassword(token.userId!, newPassword);
+
+		req.user = { id: token.userId! } as User;
 
 		res.status(200).json({
 			message: 'Password reset',

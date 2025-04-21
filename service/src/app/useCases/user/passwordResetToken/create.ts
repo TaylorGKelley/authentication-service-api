@@ -1,13 +1,11 @@
 import generateResetToken from '@/app/utils/generateResetToken';
 import { passwordResetTable } from '@/infrastructure/database/schema/passwordReset.schema';
 import { db } from '@/infrastructure/database';
-import findUser from '../findUser';
-import { EmailAddress } from '@/domain/types/mail/Email';
 import { AppError } from '@/domain/entities/AppError';
+import { User } from '@/domain/entities/User';
 
-export const createPasswordResetToken = async (email: EmailAddress) => {
-	const user = await findUser({ email });
 
+export const createPasswordResetToken = async (user: User) => {
 	if (user?.id === undefined) {
 		throw new AppError('A user with that email was not found');
 	} else if (user.googleId || user.githubId) {
