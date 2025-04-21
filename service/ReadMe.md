@@ -1,5 +1,3 @@
-### (_Still in progress_)
-
 # Authentication Service
 
 This authentication service manages all users associated with any of the court reporting applications.
