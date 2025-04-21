@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 
 const updateLinkedService = async (
 	linkedServiceId: UUID,
-	linkedService: Partial<typeof linkedServiceTable.$inferInsert>
+	linkedService: Omit<Partial<typeof linkedServiceTable.$inferInsert>, 'id'>
 ) => {
 	return (
 		await db

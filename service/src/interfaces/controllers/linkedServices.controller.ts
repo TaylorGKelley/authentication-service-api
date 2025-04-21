@@ -73,6 +73,10 @@ export const updateLinkedService: RequestHandler<
 			linkedService
 		);
 
+		if (!updatedLinkedService) {
+			throw new AppError('Linked Service not found', 404);
+		}
+
 		res.status(200).json({
 			message: 'Linked Service Updated',
 			linkedService: updatedLinkedService,
