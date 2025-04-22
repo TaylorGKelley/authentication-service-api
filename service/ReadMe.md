@@ -15,6 +15,6 @@ This API has a few different routes to manage creating, logging in, updating, an
 
 Create a `.env` file in the root directory, copying the contents of `.example.env` and adding your environments details to their respective variables. (i.e. Database URL and the port the app should run on).
 
-For migrating the database, run `npm run db:migrate`, then once the migrations have finished generating, run `npm run db:generate`. Run `npm run db:seed` to populate your database with the seed data for testing.
+For migrating the database, run `npm run db:generate`, then once the migrations have finished generating, run `npm run db:migrate`. Run `npm run db:seed` to populate your database with the seed data.
 
 After these steps have been completed you are safe to run the api with `npm run dev`.
