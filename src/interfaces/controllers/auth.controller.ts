@@ -96,7 +96,7 @@ export const register: RequestHandler<
     }
 
     if (!firstName || !lastName) {
-      throw new AppError('Please include a first and last name');
+      throw new AppError('Please include a first and last name', 400);
     }
 
     if (password !== passwordConfirm) {
@@ -106,7 +106,7 @@ export const register: RequestHandler<
     const user = await findUser({ email });
 
     if (user.id === undefined) {
-      throw new AppError('User already exists', 403);
+      throw new AppError('User with that email already exists', 403);
     }
 
     const newUser = await createUser({ firstName, lastName, email, password });
