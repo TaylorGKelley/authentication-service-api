@@ -30,7 +30,7 @@ export const activityLogTable = pgTable('activity_log', {
   // Any Error?
   errorMessage: text('error_message'),
   // Request Info
-  requestPath: varchar('request_path', { length: 255 }).notNull(),
+  requestPath: text('request_path').notNull(),
   method: varchar('method', { length: 50 }).notNull(),
   statusCode: integer('status_code').notNull(),
   // Extra Data
