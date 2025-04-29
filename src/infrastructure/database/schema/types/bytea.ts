@@ -6,7 +6,7 @@ const bytea = customType<{ data: string; notNull: false; default: false }>({
   },
   toDriver(val) {
     if (!val.match(/^[a-zA-Z0-9+/]+={0,2}$/)) {
-      throw new Error('Recipe image must be a base64 string');
+      throw new Error('Image must be a base64 string');
     }
 
     return Buffer.from(val, 'base64');

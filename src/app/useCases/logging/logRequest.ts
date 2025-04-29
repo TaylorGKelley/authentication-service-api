@@ -9,7 +9,6 @@ type LogEventParams = typeof activityLogTable.$inferInsert;
 
 export const logRequest = async (event: LogEventParams, user: User) => {
   try {
-    console.log('logging', event);
     const log = (
       await db.insert(activityLogTable).values(event).returning()
     ).at(0);

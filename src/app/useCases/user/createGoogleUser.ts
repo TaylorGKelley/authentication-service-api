@@ -2,6 +2,7 @@ import Role from '@/domain/types/authorization/Role';
 import { UserWithPassword, UserWithProfile } from '@/domain/entities/User';
 import { db } from '@/infrastructure/database';
 import { profileInfoTable, userTable } from '@/infrastructure/database/schema';
+import imageUrlToBase64 from '@/app/utils/imageUrlToBase64';
 
 const createGoogleUser = async (user: {
   googleId: string;
@@ -20,6 +21,8 @@ const createGoogleUser = async (user: {
       .returning()
   ).at(0) as UserWithPassword;
 
+  const imageBase64 = await imageUrlToBase64(user.photo);
+
   const newProfile = (
     await db
       .insert(profileInfoTable)
@@ -27,7 +30,7 @@ const createGoogleUser = async (user: {
         userId: newUser.id,
         firstName: user.firstName,
         lastName: user.lastName,
-        profileImage: user.photo,
+        profileImage: await imageUrlToBase64(user.photo),
       })
       .returning()
   ).at(0) as Partial<UserWithProfile>;
