@@ -5,7 +5,6 @@ import type LinkedService from '@/domain/types/authorization/LinkedService';
 import { AppError } from '@/domain/entities/AppError';
 import getAllPermissionsUseCase from '@/app/useCases/permissions/getAllPermissions';
 import getPermissionUseCase from '@/app/useCases/permissions/getPermission';
-import { getPermissionsForUser as getPermissionsForUserUseCase } from '@/app/useCases/permissionSync';
 import createPermissionUseCase from '@/app/useCases/permissions/createPermission';
 import importPermissionsUseCase from '@/app/useCases/permissions/importPermissions';
 import updatePermissionUseCase from '@/app/useCases/permissions/updatePermission';
