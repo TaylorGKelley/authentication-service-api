@@ -35,7 +35,7 @@ export const processSignIn: RequestHandler = async (req, res, next) => {
 		});
 
 		res.redirect(
-			`${process.env.CLIENT_URL}/login/oauth/callback?at=${newAccessToken}`
+			`${process.env.CLIENT_OAUTH_CALLBACK_URL}?at=${newAccessToken}`
 		);
 	} catch (error) {
 		next(error);
