@@ -1,11 +1,11 @@
-import { integer, pgTable, serial } from 'drizzle-orm/pg-core';
+import { integer, uuid, pgTable, serial } from 'drizzle-orm/pg-core';
 import { activityLogTable } from './activityLog.schema';
 import { userTable } from './user.schema';
 import { relations } from 'drizzle-orm';
 
 export const userActivityLogTable = pgTable('user_activity_log', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => userTable.id, {
+  userId: uuid('user_id').references(() => userTable.id, {
     onDelete: 'cascade',
   }),
   activityId: integer('activity_id').references(() => activityLogTable.id, {

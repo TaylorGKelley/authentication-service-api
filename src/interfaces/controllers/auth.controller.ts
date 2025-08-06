@@ -312,7 +312,7 @@ export const resetPassword: RequestHandler<
       throw new AppError('Passwords do not match', 400);
     }
 
-    await updatePassword(token.userId!, newPassword);
+    await updatePassword(token.userId as UUID, newPassword);
 
     req.user = { id: token.userId! } as User;
 

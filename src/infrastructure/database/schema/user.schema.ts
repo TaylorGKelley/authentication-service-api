@@ -2,7 +2,7 @@ import { relations } from 'drizzle-orm';
 import {
   boolean,
   pgTable,
-  serial,
+  uuid,
   text,
   timestamp,
   varchar,
@@ -10,7 +10,7 @@ import {
 import { profileInfoTable, userActivityLogTable, userRoleTable } from '.';
 
 export const userTable = pgTable('user', {
-  id: serial('id').primaryKey(),
+  id: uuid('id').primaryKey().defaultRandom(),
   googleId: varchar('google_id', { length: 50 }).unique(),
   githubId: text('github_id'),
   email: varchar('email', { length: 256 }).notNull(),

@@ -1,11 +1,11 @@
-import { integer, pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { uuid, pgTable, varchar } from 'drizzle-orm/pg-core';
 import bytea from './types/bytea';
 import { userTable } from '.';
 import phoneNumber from './types/phoneNumber';
 
 export const profileInfoTable = pgTable('profile_info', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => userTable.id, {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id').references(() => userTable.id, {
     onDelete: 'cascade',
   }),
   firstName: varchar('first_name', { length: 256 }).notNull(),

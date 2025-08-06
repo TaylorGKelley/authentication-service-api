@@ -4,7 +4,7 @@ import hashToken from '@/app/utils/hashToken';
 
 export const createRefreshTokenEntry = async (
   rid: UUID,
-  userId: number,
+  userId: UUID,
   expirationTimeSeconds: number
 ) => {
   const token = await hashToken(rid);
@@ -33,7 +33,7 @@ export const deleteRefreshTokenEntry = async (rid: UUID | string) => {
   await redisClient.del(`refreshToken:${token}`);
 };
 
-export const deleteAllUserRefreshTokenEntries = async (userId: number) => {
+export const deleteAllUserRefreshTokenEntries = async (userId: UUID) => {
   // Retrieve all token IDs for the user
   const tokenIds = await redisClient.smembers(`userTokens:${userId}`);
 
@@ -47,7 +47,7 @@ export const deleteAllUserRefreshTokenEntries = async (userId: number) => {
   }
 };
 
-export const validateRefreshTokenEntry = async (rid: UUID, userId: number) => {
+export const validateRefreshTokenEntry = async (rid: UUID, userId: UUID) => {
   const token = await hashToken(rid);
 
   const tokenDetails = await redisClient.hgetall(`refreshToken:${token}`);
@@ -61,7 +61,7 @@ export const validateRefreshTokenEntry = async (rid: UUID, userId: number) => {
     return false;
   }
 
-  return parseInt(tokenDetails.userId) === userId;
+  return tokenDetails.userId === userId;
 };
 
 export const createAccessTokenEntry = async (

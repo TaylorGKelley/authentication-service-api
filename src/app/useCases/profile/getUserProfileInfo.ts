@@ -1,9 +1,14 @@
 import { db } from '@/infrastructure/database';
 import { eq, getTableColumns } from 'drizzle-orm';
 import { profileInfoTable, userTable } from '@/infrastructure/database/schema';
-import { User, UserWithProfile } from '@/domain/entities/User';
+import {
+  User,
+  UserWithPassword,
+  UserWithProfile,
+} from '@/domain/entities/User';
+import { UUID } from 'node:crypto';
 
-const getUserProfileInfo = async (userId: number) => {
+const getUserProfileInfo = async (userId: UUID) => {
   const { password, ...columnsToSelect } = getTableColumns(userTable);
 
   const result = (
@@ -22,7 +27,7 @@ const getUserProfileInfo = async (userId: number) => {
 
   return new UserWithProfile(
     result.user as User,
-    result.profileInfo as UserWithProfile
+    result.profileInfo as UserWithPassword
   );
 };
 
