@@ -13,7 +13,7 @@ export const logRequest = async (event: LogEventParams, user: User) => {
       await db.insert(activityLogTable).values(event).returning()
     ).at(0);
 
-    if (user && log) {
+    if (user?.id && log) {
       await db.insert(userActivityLogTable).values({
         userId: user.id,
         activityId: log.id,

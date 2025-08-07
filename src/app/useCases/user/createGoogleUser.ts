@@ -51,7 +51,10 @@ const createGoogleUser = async (user: {
     )
     .returning();
 
-  const userWithProfile = new UserWithProfile(newUser, newProfile);
+  const userWithProfile = new UserWithProfile(newUser, {
+    ...newProfile,
+    id: newUser.id,
+  });
 
   return userWithProfile;
 };
