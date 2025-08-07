@@ -1,7 +1,12 @@
-import Role from '@/domain/types/authorization/Role';
+import { eq } from 'drizzle-orm';
 import { UserWithPassword, UserWithProfile } from '@/domain/entities/User';
 import { db } from '@/infrastructure/database';
-import { profileInfoTable, userTable } from '@/infrastructure/database/schema';
+import {
+  profileInfoTable,
+  roleTable,
+  userRoleTable,
+  userTable,
+} from '@/infrastructure/database/schema';
 import imageUrlToBase64 from '@/app/utils/imageUrlToBase64';
 
 const createGoogleUser = async (user: {
@@ -21,8 +26,6 @@ const createGoogleUser = async (user: {
       .returning()
   ).at(0) as UserWithPassword;
 
-  const imageBase64 = await imageUrlToBase64(user.photo);
-
   const newProfile = (
     await db
       .insert(profileInfoTable)
@@ -35,26 +38,18 @@ const createGoogleUser = async (user: {
       .returning()
   ).at(0) as Partial<UserWithProfile>;
 
-  // Insert default role
-  // const defaultRoleId = (
-  //   await db
-  //     .select()
-  //     .from(roleTable)
-  //     .where(eq(roleTable.isDefault, true))
-  //     .limit(1)
-  // ).at(0)?.id;
-  // const userRole = await db
-  //   .insert(userRoleTable)
-  //   .values({ userId: newUser.id, roleId: defaultRoleId || 1 })
-  //   .returning();
-  // const role = await db
-  //   .select()
-  //   .from(roleTable)
-  //   .where(eq(roleTable.id, defaultRoleId || 0));
-
-  // newUser.roles = [
-  //   { ...userRole.at(0), permissionLevel: role.at(0)?.permissionLevel },
-  // ] as Role[];
+  // Insert default roles
+  const defaultRoles = await db
+    .select()
+    .from(roleTable)
+    .where(eq(roleTable.assignToNewUser, true))
+    .limit(1);
+  await db
+    .insert(userRoleTable)
+    .values(
+      defaultRoles.map((role) => ({ userId: newUser.id!, roleId: role.id }))
+    )
+    .returning();
 
   const userWithProfile = new UserWithProfile(newUser, newProfile);
 

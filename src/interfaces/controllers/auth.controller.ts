@@ -105,7 +105,7 @@ export const register: RequestHandler<
 
     const user = await findUser({ email });
 
-    if (!user?.id) {
+    if (user.id !== undefined) {
       throw new AppError('User with that email already exists', 403);
     }
 
