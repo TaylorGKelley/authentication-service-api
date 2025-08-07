@@ -144,6 +144,12 @@ export const rolesData: (typeof roleTable.$inferInsert)[] = [
     name: 'Super Admin',
     linkedServiceId: linkedServicesData[0].id!,
   },
+  {
+    id: 1,
+    name: 'User Default',
+    assignToNewUser: true,
+    linkedServiceId: linkedServicesData[0].id!,
+  },
 ];
 
 // * linking tables
@@ -151,6 +157,10 @@ export const userRolesData: (typeof userRoleTable.$inferInsert)[] = [
   {
     userId: usersData[0].id!,
     roleId: rolesData[0].id!,
+  },
+  {
+    userId: usersData[0].id!,
+    roleId: rolesData[1].id!,
   },
 ];
 
@@ -235,5 +245,9 @@ export const rolePermissionsData: (typeof rolePermissionTable.$inferInsert)[] =
     {
       permissionId: permissionsData[19].id!,
       roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[1].id!,
+      roleId: rolesData[1].id!,
     },
   ];
