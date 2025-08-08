@@ -151,6 +151,16 @@ export const permissionsData: (typeof permissionTable.$inferInsert)[] = [
     name: 'webhook:readWrite',
     linkedServiceId: linkedServicesData[0].id!,
   },
+  {
+    id: 23,
+    name: 'webhookEvent:read',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
+  {
+    id: 24,
+    name: 'webhookEvent:retry',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
 ];
 
 export const rolesData: (typeof roleTable.$inferInsert)[] = [
@@ -267,6 +277,18 @@ export const rolePermissionsData: (typeof rolePermissionTable.$inferInsert)[] =
     },
     {
       permissionId: permissionsData[21].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[22].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[23].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[24].id!,
       roleId: rolesData[0].id!,
     },
     {

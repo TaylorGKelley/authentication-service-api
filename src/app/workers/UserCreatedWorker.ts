@@ -1,26 +1,19 @@
 import { type UUID } from 'node:crypto';
-import { eq, and, lte } from 'drizzle-orm';
+import { eq, and, lte, lt } from 'drizzle-orm';
 import { db } from '@/infrastructure/database';
 import { webhookEventTable } from '@/infrastructure/database/schema/webhookEvent.schema';
 import { webhookTable } from '@/infrastructure/database/schema/webhook.schema';
 
-type UserCreatedEvent = {
-  type: 'user-created';
-  payload: {
-    id: UUID;
-  };
-  retries: number;
-};
+const maxRetries = 5;
 
-export class UserCreatedWorker {
-  _maxRetries = 5;
-
+class UserCreatedWorker {
   constructor() {
+    console.log('[Webhooks] User worker initialized');
     this.startUserCreatedWorker();
   }
 
   private startUserCreatedWorker() {
-    setTimeout(UserCreatedWorker.processWebhookEvents, 5000);
+    setInterval(UserCreatedWorker.processWebhookEvents, 5000);
   }
 
   public static async createUserEvent(userId: UUID) {
@@ -51,7 +44,8 @@ export class UserCreatedWorker {
           .where(
             and(
               eq(webhookEventTable.status, 'pending'),
-              lte(webhookEventTable.nextAttemptAt, new Date())
+              lte(webhookEventTable.nextAttemptAt, new Date()),
+              lt(webhookEventTable.retries, maxRetries)
             )
           )
           .limit(10)
@@ -74,7 +68,7 @@ export class UserCreatedWorker {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'x-webhook-signature': target.secret,
+              'x-webhook-secret': target.secret,
             },
             body: JSON.stringify(event.payload),
           });
@@ -84,19 +78,27 @@ export class UserCreatedWorker {
               .update(webhookEventTable)
               .set({ status: 'delivered' })
               .where(eq(webhookEventTable.id, event.id));
+
+            console.log(
+              `[Webhooks - Sent] Sent user with id: ${event.payload.id}`
+            );
           } else {
             throw new Error(`HTTP ${res.status}`);
           }
         } catch (err) {
+          console.log(
+            `[Webhooks - Error] Error sending to target: ${target.url}`
+          );
           const retries = event.retries + 1;
           const backoff = Math.min(2 ** retries * 1000, 10 * 60 * 1000); // up to 10min delay
           const nextAttempt = new Date(Date.now() + backoff);
+
           await db
             .update(webhookEventTable)
             .set({
               retries,
               nextAttemptAt: nextAttempt,
-              status: 'pending',
+              status: retries > maxRetries ? 'failed' : 'pending',
             })
             .where(eq(webhookEventTable.id, event.id));
         }
@@ -105,4 +107,6 @@ export class UserCreatedWorker {
   }
 }
 
-export const userCreatedWorker = new UserCreatedWorker();
+const userCreatedWorker = new UserCreatedWorker();
+
+export { userCreatedWorker as default, UserCreatedWorker };

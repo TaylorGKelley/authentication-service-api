@@ -2,6 +2,7 @@ import { decryptSecret, encryptSecret } from '@/app/utils/encryptWebhookSecret';
 import { generateSecret } from '@/app/utils/generateWebhookSecret';
 import { db } from '@/infrastructure/database';
 import { webhookTable } from '@/infrastructure/database/schema/webhook.schema';
+import { webhookEventTable } from '@/infrastructure/database/schema/webhookEvent.schema';
 import { eq, getTableColumns } from 'drizzle-orm';
 import { type UUID } from 'node:crypto';
 
@@ -11,6 +12,8 @@ export type WebhookType = Pick<
 > &
   Omit<typeof webhookTable.$inferSelect, 'secretIv'>; // Making secretIv column optional so it can be removed from response
 export type NewWebhookType = typeof webhookTable.$inferInsert;
+
+export type WebhookEventType = typeof webhookEventTable.$inferSelect;
 
 export class Webhook {
   public static async getAll(): Promise<
@@ -22,6 +25,15 @@ export class Webhook {
       ...columns
     } = getTableColumns(webhookTable);
     const result = await db.select(columns).from(webhookTable);
+
+    return result;
+  }
+
+  public static async getAllFailedEvents(): Promise<WebhookEventType[]> {
+    const result = await db
+      .select()
+      .from(webhookEventTable)
+      .where(eq(webhookEventTable.status, 'failed'));
 
     return result;
   }
@@ -42,6 +54,24 @@ export class Webhook {
       result.secret = decryptSecret(result?.secret!, result?.secretIv!);
       delete result.secretIv;
     }
+
+    return result;
+  }
+
+  public static async retryEvent(
+    eventId: UUID
+  ): Promise<WebhookEventType | undefined> {
+    const result = (
+      await db
+        .update(webhookEventTable)
+        .set({
+          retries: 0,
+          status: 'pending',
+          nextAttemptAt: new Date(),
+        })
+        .where(eq(webhookEventTable.id, eventId))
+        .returning()
+    ).at(0);
 
     return result;
   }

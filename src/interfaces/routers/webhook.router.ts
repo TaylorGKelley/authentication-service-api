@@ -3,6 +3,7 @@ import authorize from '../middleware/authorize';
 import {
   createWebhook,
   deleteWebhook,
+  getAllFailedEvents,
   getAllWebhooks,
   getWebhook,
   updateWebhook,
@@ -22,5 +23,12 @@ webhookRouter
     authorize(['webhook:write', 'webhook:readWrite']),
     deleteWebhook
   );
+
+webhookRouter.get(
+  '/events/failed',
+  authorize(['webhookEvent:read']),
+  getAllFailedEvents
+);
+webhookRouter.post('/events/retry/:id', authorize(['webhookEvent:retry']));
 
 export default webhookRouter;

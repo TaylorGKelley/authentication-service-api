@@ -1,6 +1,7 @@
 import {
-  NewWebhookType,
+  type NewWebhookType,
   Webhook,
+  type WebhookEventType,
   type WebhookType,
 } from '@/app/useCases/webhooks';
 import { AppError } from '@/domain/entities/AppError';
@@ -36,6 +37,45 @@ export const getWebhook: RequestHandler<
     res.status(200).json({
       success: true,
       data: webhook,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllFailedEvents: RequestHandler<
+  unknown,
+  {
+    success: true;
+    data: WebhookEventType[];
+  }
+> = async (_req, res, next) => {
+  try {
+    const events = await Webhook.getAllFailedEvents();
+    if (!events) throw new AppError('Failed to fetch events', 400);
+
+    res.status(200).json({
+      success: true,
+      data: events,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const retryEvent: RequestHandler<
+  { id: UUID },
+  { success: true; data: WebhookEventType }
+> = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const event = await Webhook.retryEvent(id);
+    if (!event) throw new AppError('Event not found', 404);
+
+    res.status(200).json({
+      success: true,
+      data: event,
     });
   } catch (error) {
     next(error);
