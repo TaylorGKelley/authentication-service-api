@@ -8,6 +8,7 @@ import {
   userTable,
 } from '@/infrastructure/database/schema';
 import { eq } from 'drizzle-orm';
+import { userEvent } from '@/app/workers/UserEventWorker';
 
 const createUser = async (user: {
   firstName: string;
@@ -38,8 +39,8 @@ const createUser = async (user: {
   ).at(0) as { firstName: string; lastName: string };
 
   const createdUser = new UserWithProfile(newUser, {
-    firstName: profileInfo.firstName,
-    lastName: profileInfo.lastName,
+    ...profileInfo,
+    id: newUser.id,
   });
 
   // Insert default roles
@@ -54,6 +55,9 @@ const createUser = async (user: {
       defaultRoles.map((role) => ({ userId: createdUser.id!, roleId: role.id }))
     )
     .returning();
+
+  // Notify external services
+  userEvent.emit('user-created', newUser.id);
 
   return createdUser;
 };

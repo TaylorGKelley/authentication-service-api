@@ -1,3 +1,6 @@
+import './app/workers/PermissionSyncWorker';
+import './app/workers/UserEventWorker';
+
 import express from 'express';
 import cors from 'cors';
 import passport from '@/infrastructure/configurations/passport';
@@ -21,8 +24,8 @@ app.use(cookieParser());
 app.use(express.json());
 
 const corsOptions = {
-	origin: process.env.CLIENT_URL!,
-	credentials: true, // Allow cookies (refresh token) to be sent
+  origin: process.env.CLIENT_URL!,
+  credentials: true, // Allow cookies (refresh token) to be sent
 } as const;
 app.use(cors(corsOptions));
 
@@ -30,15 +33,15 @@ app.use(helmet());
 app.use(generalLimiter);
 
 app.use(
-	csrfProtected({
-		exemptRoutes: [
-			'/api/v1/login',
-			'/api/v1/register',
-			'/api/v1/isauthenticated',
-			'/api/v1/auth/google',
-			'/api/v1/auth/google/callback',
-		],
-	})
+  csrfProtected({
+    exemptRoutes: [
+      '/api/v1/login',
+      '/api/v1/register',
+      '/api/v1/isauthenticated',
+      '/api/v1/auth/google',
+      '/api/v1/auth/google/callback',
+    ],
+  })
 ); // Protect the entire application (CSRF)
 
 app.use(passport.initialize());
@@ -52,13 +55,13 @@ app.use('/api/v1/users', myInfoRouter);
 app.use('/api/v1/logs', logViewRouter);
 app.use('/api/v1/linked-services', linkedServiceRouter);
 app.use(
-	'/api/v1/linked-services/:linkedServiceId/permissions',
-	permissionRouter
+  '/api/v1/linked-services/:linkedServiceId/permissions',
+  permissionRouter
 );
 app.use('/api/v1/linked-services/:linkedServiceId/roles', roleRouter);
 
 app.use('*', (_req, res) => {
-	res.status(404).json({ message: 'Not found' });
+  res.status(404).json({ message: 'Not found' });
 });
 
 app.use(errorHandler);
