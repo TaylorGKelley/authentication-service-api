@@ -1,4 +1,4 @@
-import crypto, { UUID } from 'node:crypto';
+import { UUID } from 'node:crypto';
 import {
   linkedServiceTable,
   permissionTable,
@@ -12,7 +12,7 @@ import { rolePermissionTable } from '../schema/rolePermission.schema';
 // * user info
 export const usersData: (typeof userTable.$inferInsert)[] = [
   {
-    id: crypto.randomUUID(),
+    id: 'e3d9287c-3eeb-4a67-b7a9-c0dba079a087' as UUID,
     email: 'john.doe@example.com',
     password: 'Password123',
   },
@@ -20,7 +20,7 @@ export const usersData: (typeof userTable.$inferInsert)[] = [
 
 export const profileInfoData: (typeof profileInfoTable.$inferInsert)[] = [
   {
-    userId: usersData[0].id as UUID,
+    userId: usersData[0].id,
     firstName: 'John',
     lastName: 'Doe',
   },
@@ -136,6 +136,31 @@ export const permissionsData: (typeof permissionTable.$inferInsert)[] = [
     name: 'linkedService:delete',
     linkedServiceId: linkedServicesData[0].id!,
   },
+  {
+    id: 20,
+    name: 'webhook:read',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
+  {
+    id: 21,
+    name: 'webhook:write',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
+  {
+    id: 22,
+    name: 'webhook:readWrite',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
+  {
+    id: 23,
+    name: 'webhookEvent:read',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
+  {
+    id: 24,
+    name: 'webhookEvent:retry',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
 ];
 
 export const rolesData: (typeof roleTable.$inferInsert)[] = [
@@ -244,6 +269,26 @@ export const rolePermissionsData: (typeof rolePermissionTable.$inferInsert)[] =
     },
     {
       permissionId: permissionsData[19].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[20].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[21].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[22].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[23].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[24].id!,
       roleId: rolesData[0].id!,
     },
     {

@@ -8,7 +8,7 @@ import {
   userTable,
 } from '@/infrastructure/database/schema';
 import imageUrlToBase64 from '@/app/utils/imageUrlToBase64';
-import { userEvent } from '@/app/workers/UserEventWorker';
+import { UserCreatedWorker } from '@/app/workers/UserCreatedWorker';
 
 const createGoogleUser = async (user: {
   googleId: string;
@@ -58,7 +58,7 @@ const createGoogleUser = async (user: {
   });
 
   // Notify external services
-  userEvent.emit('user-created', newUser.id);
+  UserCreatedWorker.createUserEvent(newUser.id!);
 
   return userWithProfile;
 };
