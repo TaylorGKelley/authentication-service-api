@@ -8,7 +8,7 @@ import {
   userTable,
 } from '@/infrastructure/database/schema';
 import { eq } from 'drizzle-orm';
-import { userEvent } from '@/app/workers/UserEventWorker';
+import { UserCreatedWorker } from '@/app/workers/UserCreatedWorker';
 
 const createUser = async (user: {
   firstName: string;
@@ -57,7 +57,7 @@ const createUser = async (user: {
     .returning();
 
   // Notify external services
-  userEvent.emit('user-created', newUser.id);
+  UserCreatedWorker.createUserEvent(newUser.id!);
 
   return createdUser;
 };

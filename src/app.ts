@@ -1,5 +1,5 @@
 import './app/workers/PermissionSyncWorker';
-import './app/workers/UserEventWorker';
+import './app/workers/UserCreatedWorker';
 
 import express from 'express';
 import cors from 'cors';
