@@ -1,5 +1,8 @@
 import 'dotenv/config';
 
+import permissionSyncWorker from './app/workers/PermissionSyncWorker';
+import './app/workers/UserCreatedWorker';
+
 import app from './app';
 import { AppError } from './domain/entities/AppError';
 
@@ -28,6 +31,8 @@ const server = app.listen(port, () => {
 
 process.on('SIGINT', () => {
   console.log('Shutting down server...');
+
+  permissionSyncWorker.dispose();
 
   server.close(() => {
     console.log('Closed out remaining connections.');

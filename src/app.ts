@@ -1,6 +1,3 @@
-import './app/workers/PermissionSyncWorker';
-import './app/workers/UserCreatedWorker';
-
 import express from 'express';
 import cors from 'cors';
 import passport from '@/infrastructure/configurations/passport';

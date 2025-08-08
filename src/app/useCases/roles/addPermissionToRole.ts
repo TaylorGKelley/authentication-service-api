@@ -1,4 +1,4 @@
-import { permissionSyncWorker } from '@/app/workers/PermissionSyncWorker';
+import permissionSyncWorker from '@/app/workers/PermissionSyncWorker';
 import LinkedService from '@/domain/types/authorization/LinkedService';
 import { db } from '@/infrastructure/database';
 import { rolePermissionTable } from '@/infrastructure/database/schema';

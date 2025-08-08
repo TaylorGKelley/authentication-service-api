@@ -61,6 +61,12 @@ class PermissionSyncWorker extends EventEmitter {
       this.fullSync();
     }, 10 * 60 * 1000); // every 10 minutes
   }
+
+  public dispose() {
+    this.removeAllListeners();
+  }
 }
 
-export const permissionSyncWorker = new PermissionSyncWorker();
+const permissionSyncWorker = new PermissionSyncWorker();
+
+export default permissionSyncWorker;
