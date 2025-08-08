@@ -6,6 +6,7 @@ import {
   getAllFailedEvents,
   getAllWebhooks,
   getWebhook,
+  retryEvent,
   updateWebhook,
 } from '../controllers/webhook.controller';
 
@@ -29,6 +30,10 @@ webhookRouter.get(
   authorize(['webhookEvent:read']),
   getAllFailedEvents
 );
-webhookRouter.post('/events/retry/:id', authorize(['webhookEvent:retry']));
+webhookRouter.post(
+  '/events/retry/:id',
+  authorize(['webhookEvent:retry']),
+  retryEvent
+);
 
 export default webhookRouter;

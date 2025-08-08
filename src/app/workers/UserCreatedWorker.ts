@@ -1,8 +1,10 @@
 import { type UUID } from 'node:crypto';
-import { eq, and, lte, lt } from 'drizzle-orm';
+import { eq, and, lte } from 'drizzle-orm';
 import { db } from '@/infrastructure/database';
 import { webhookEventTable } from '@/infrastructure/database/schema/webhookEvent.schema';
 import { webhookTable } from '@/infrastructure/database/schema/webhook.schema';
+import { generateSignature } from '../utils/generateWebhookSignature';
+import { decryptSecret } from '../utils/encryptWebhookSecret';
 
 const maxRetries = 5;
 
@@ -45,7 +47,7 @@ class UserCreatedWorker {
             and(
               eq(webhookEventTable.status, 'pending'),
               lte(webhookEventTable.nextAttemptAt, new Date()),
-              lt(webhookEventTable.retries, maxRetries)
+              lte(webhookEventTable.retries, maxRetries)
             )
           )
           .limit(10)
@@ -53,7 +55,11 @@ class UserCreatedWorker {
 
     for (const event of events) {
       const targets = await db
-        .select()
+        .select({
+          url: webhookTable.url,
+          secret: webhookTable.secret,
+          secretIv: webhookTable.secretIv,
+        })
         .from(webhookTable)
         .where(
           and(
@@ -68,7 +74,11 @@ class UserCreatedWorker {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'x-webhook-secret': target.secret,
+              'x-webhook-secret': decryptSecret(target.secret, target.secretIv),
+              'x-webhook-signature': generateSignature(
+                target.secret,
+                event.payload
+              ),
             },
             body: JSON.stringify(event.payload),
           });
