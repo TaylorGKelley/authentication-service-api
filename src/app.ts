@@ -18,6 +18,7 @@ import authenticateRequest from './interfaces/middleware/authenticateRequest';
 import permissionRouter from './interfaces/routers/permission.router';
 import roleRouter from './interfaces/routers/role.router';
 import linkedServiceRouter from './interfaces/routers/linkedServices.router';
+import webhookRouter from './interfaces/routers/webhook.router';
 
 const app = express();
 app.use(cookieParser());
@@ -59,6 +60,7 @@ app.use(
   permissionRouter
 );
 app.use('/api/v1/linked-services/:linkedServiceId/roles', roleRouter);
+app.use('/api/v1/webhooks', webhookRouter);
 
 app.use('*', (_req, res) => {
   res.status(404).json({ message: 'Not found' });

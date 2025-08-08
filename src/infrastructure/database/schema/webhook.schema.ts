@@ -16,6 +16,7 @@ export const webhookTable = pgTable('webhook', {
   url: varchar('url', { length: 2048 }).notNull(),
   eventType: webhookEventTypeEnum('event_type').notNull(),
   enabled: boolean('enabled').notNull().default(true),
-  secret: varchar('secret', { length: 255 }).notNull(),
+  secret: varchar('secret', { length: 512 }).notNull(),
+  secretIv: varchar('secret_iv', { length: 24 }).notNull(),
   createdAt: timestamp('created_at').defaultNow(),
 });

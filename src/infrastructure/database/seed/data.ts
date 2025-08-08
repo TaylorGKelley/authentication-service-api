@@ -136,6 +136,21 @@ export const permissionsData: (typeof permissionTable.$inferInsert)[] = [
     name: 'linkedService:delete',
     linkedServiceId: linkedServicesData[0].id!,
   },
+  {
+    id: 20,
+    name: 'webhook:read',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
+  {
+    id: 21,
+    name: 'webhook:write',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
+  {
+    id: 22,
+    name: 'webhook:readWrite',
+    linkedServiceId: linkedServicesData[0].id!,
+  },
 ];
 
 export const rolesData: (typeof roleTable.$inferInsert)[] = [
@@ -244,6 +259,14 @@ export const rolePermissionsData: (typeof rolePermissionTable.$inferInsert)[] =
     },
     {
       permissionId: permissionsData[19].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[20].id!,
+      roleId: rolesData[0].id!,
+    },
+    {
+      permissionId: permissionsData[21].id!,
       roleId: rolesData[0].id!,
     },
     {
