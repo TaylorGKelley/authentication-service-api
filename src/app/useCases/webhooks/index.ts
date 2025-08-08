@@ -76,18 +76,24 @@ export class Webhook {
     webhookId: UUID,
     webhook: Partial<Omit<NewWebhookType, 'id' | 'secret' | 'secretIv'>>
   ): Promise<WebhookType | undefined> {
+    const {
+      secret: _secret,
+      secretIv: _iv,
+      ...columns
+    } = getTableColumns(webhookTable);
+
     const result = (
       await db
         .update(webhookTable)
-        .set({ ...webhook, id: undefined, secret: undefined })
+        .set({
+          ...webhook,
+          id: undefined, // not allowed to update id, secret, or secretIv columns
+          secret: undefined,
+          secretIv: undefined,
+        })
         .where(eq(webhookTable.id, webhookId))
-        .returning()
+        .returning(columns)
     ).at(0) as WebhookType;
-
-    if (result) {
-      result.secret = decryptSecret(result?.secret!, result?.secretIv!);
-      delete result.secretIv;
-    }
 
     return result;
   }
