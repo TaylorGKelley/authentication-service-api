@@ -1,4 +1,4 @@
-import 'dotenv/config';
+if (process.env.NODE_ENV === 'development') import('dotenv/config');
 
 import permissionSyncWorker from './app/workers/PermissionSyncWorker';
 import './app/workers/UserCreatedWorker';
