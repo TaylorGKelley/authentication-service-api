@@ -42,7 +42,7 @@ services:
         condition: service_healthy
     networks:
       - auth-network
-    restart: 'no' # runs only once on start-up
+    restart: no # runs only once on start-up
   authentication_service:
     build:
       context: .
