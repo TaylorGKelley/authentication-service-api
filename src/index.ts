@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV === 'development') import('dotenv/config');
+import 'dotenv/config';
 
 import permissionSyncWorker from './app/workers/PermissionSyncWorker';
 import './app/workers/UserCreatedWorker';
@@ -6,7 +6,7 @@ import './app/workers/UserCreatedWorker';
 import app from './app';
 import { AppError } from './domain/entities/AppError';
 
-const port = process.env.PORT || 7001;
+const PORT = 7001;
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
@@ -25,8 +25,8 @@ process.on('unhandledRejection', (error: Error, _promise) => {
   console.error(`Unhandled Rejection: ${error.message}`);
 });
 
-const server = app.listen(port, () => {
-  console.log(`Application is running on port: ${port}`);
+const server = app.listen(PORT, () => {
+  console.log(`Application is running on port: ${PORT}`);
 });
 
 process.on('SIGINT', () => {

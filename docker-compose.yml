@@ -1,0 +1,79 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_PASSWORD: postgresPass
+      POSTGRES_DB: authentication_service
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - auth-network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d authentication_service']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:latest
+    container_name: redis-token-store
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/var/lib/postgresql/data
+    networks:
+      - auth-network
+    healthcheck:
+      test: ['CMD-SHELL', 'redis-cli ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  migrate_database:
+    build:
+      context: .
+      target: migrations
+    container_name: auth-migrations
+    environment:
+      DATABASE_URL: postgres://postgres:postgresPass@postgres-db:5432/authentication_service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - auth-network
+    restart: 'no' # runs only once on start-up
+  authentication_service:
+    build:
+      context: .
+      target: production
+    image: authentication_service:latest
+    container_name: auth-service
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: postgres://postgres:postgresPass@postgres-db:5432/authentication_service
+      REDIS_HOST: redis-token-store
+      REDIS_PORT: 6379
+    ports:
+      - '7001:7001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      migrate_database:
+        condition: service_completed_successfully
+    networks:
+      - auth-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  auth-network:
+    driver: bridge
+    name: auth-network
